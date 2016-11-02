@@ -1,2 +1,2 @@
 # walkmate
-Group Project 
+Group Project for EECS341
