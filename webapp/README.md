@@ -1,5 +1,4 @@
 # webapp
----
 
 This folder contains the contents necessary to run the web server for the Walkmate wb application.
 
