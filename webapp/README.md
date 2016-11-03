@@ -11,10 +11,10 @@ The static folder contains "static" resources such as Javascript and CSS.
 
 The templates folder contains HTML-like templates that the webserver fills out and sends to the client.
 
-## __init__.py
+## ```__init__.py```
 
-The __init__.py file creates the webapp.server object. This is used to run the application (```server.run()```) and setup routes for the API (```@server.route()```)
+The ```__init__.py``` file creates the webapp.server object. This is used to run the application (```server.run()```) and setup routes for the API (```@server.route()```)
 
-## api.py
+## ```api.py```
 
-This is the file that the __init__.py file uses to configure the API for the server side of the application.
+This is the file that the ```__init__.py``` file uses to configure the API for the server side of the application.
