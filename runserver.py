@@ -1,3 +1,3 @@
 from webapp import server
 
-server.run()
+server.run(debug=True)
