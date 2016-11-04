@@ -13,4 +13,4 @@ Group Project for EECS341
 
 ### Then run the web server from the docker container
 
-```docker run buckbaskin/walkmate python src/runserver.py```
+```docker run -p 48000:5000 buckbaskin/walkmate python src/runserver.py```
