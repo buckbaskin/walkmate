@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<form class="" role="search">
+  <div class="input-group">
+    <span class="input-group-addon" id="basic-addon1">from</span>
+    <input type="text" id="trip-from" class="form-control" placeholder="Starting Location" aria-describedby="basic-addon1">
+  </div>
+  <div class="input-group">
+    <span class="input-group-addon" id="basic-addon2">to</span>
+    <input type="text" id="trip-to" class="form-control" placeholder="Ending Location" aria-describedby="basic-addon2">
+  </div>
+  <div class="input-group">
+    <span class="input-group-addon" id="basic-addon3">at</span>
+    <input type="text" id="trip-at" class="form-control" placeholder="12:15pm" aria-describedby="basic-addon3">
+  </div>
+  <button type="submit" class="btn btn-default" onclick="submitTrip();">Submit</button>
+</form>
+{% endblock%}
