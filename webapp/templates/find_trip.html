@@ -42,7 +42,7 @@
   <h1>Trips</h1>
   <div class="list-group">
     {% for trip in trips %}
-      <a href="/t/{{ trip[0] }}" class="list-group-item"><span>{{ trip }} <button type="button" class="btn">Join Trip</button></span></a>
+      <a href="/t/{{ trip[0] }}" class="list-group-item">From: {{ trip[1] }} To: {{ trip[2] }} At: {{ trip[3] }}</a>
     {% endfor %}
   </div>
   {% else %}
