@@ -50,14 +50,24 @@ def tripfinder():
         from_=from_, to_=to_, at_=at_, message=message, 
         friend_trips=[], trips=trips)
 
+@router.route('/trip_more', methods=['GET'])
+def loadMoreTrips():
+    # TODO implement this
+    return redirect('/trip')
+
 def expandIdentifier(shortIdentifier):
+    # TODO maybe implement this
+    # Maybe just make a short id for everything when it is inserted into db
     return shortIdentifier
 
 def compressIdentifier(longIdentifier):
+    # TODO maybe implement this
+    # Maybe just make a short id for everything when it is inserted into db
     return longIdentifier
 
 @router.route('/t/<shorttripid>/join', methods=['GET'])
 def joinTripPage(shorttripid):
+    # TODO implement joining a trip
     return redirect('/t/%s' % (shorttripid,))
 
 @router.route('/t/<shorttripid>', methods=['GET'])
@@ -67,7 +77,8 @@ def tripDetailPage(shorttripid):
     try:
         cur = conn.cursor()
 
-        cur.execute('''SELECT * FROM trips WHERE id = long_id''')
+        cur.execute('''SELECT * FROM trips WHERE id = %s OR short_id = %s''',
+            (long_id, shorttripid,))
 
         trip = cur.fetchmany(1)
     except:
