@@ -46,14 +46,45 @@ def tripfinder():
     if trips == []:
         trips = [EXAMPLE_TRIP]
     
-    return render_template('find_trip.html', 
+    return render_template('find_trip.html',
+        title1='W', title2='Find a Trip',
         from_=from_, to_=to_, at_=at_, message=message, 
         friend_trips=[], trips=trips)
 
 @router.route('/trip_more', methods=['GET'])
 def loadMoreTrips():
-    # TODO implement this
-    return redirect('/trip')
+    from_ = request.args.get('trip-from')
+    to_ = request.args.get('trip-to')
+    at_ = request.args.get('trip-at')
+    if from_ is None or to_ is None or at_ is None:
+        from_ = ''
+        to_ = ''
+        at_ = ''
+    prefer_friends = request.args.get('friends')
+    
+    try:
+        cur = conn.cursor()
+
+        cur.execute("""SELECT * FROM trips""")
+
+        trips = cur.fetchmany(10)
+    except:
+        trips = []
+        print('Database requets failed.')
+    
+    if not from_ == '' and not to_ == '' and not at_ == '':
+        message = 'The database results go here. We probably want to template a list.'
+    else:
+        message = 'Can you provide more information?'
+        trips = []
+
+    if trips == []:
+        trips = [EXAMPLE_TRIP]
+    
+    return render_template('find_trip.html', 
+        title1='W', title2='Find More Trips',
+        from_=from_, to_=to_, at_=at_, message=message, 
+        friend_trips=[], trips=trips)
 
 def expandIdentifier(shortIdentifier):
     # TODO maybe implement this
@@ -86,7 +117,9 @@ def tripDetailPage(shorttripid):
 
     if len(trip) <= 0:
         if shorttripid == 'special_trip_id':
-            return render_template('trip_detail.html', trip=EXAMPLE_TRIP)
+            return render_template('trip_detail.html',
+                title1='W', title2='Trip Details',
+                trip=EXAMPLE_TRIP)
         # no result
         return redirect('/trip')
     else:
