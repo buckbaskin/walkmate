@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
+
+<div class="page-header">
+  <h1>Find a trip <small>I dare you to have fun</small></h1>
+</div>
+
 <form class="" role="search" action="trip" method="get">
   <div class="input-group">
     <span class="input-group-addon" id="basic-addon1">from</span>
@@ -13,6 +18,9 @@
     <span class="input-group-addon" id="basic-addon3">at</span>
     <input type="text" id="trip-at" name="trip-at" value="{{at_}}" class="form-control" placeholder="12:15pm" aria-describedby="basic-addon3">
   </div>
+  <div class="checkbox">
+    <label><input type="checkbox" name="friends">Prefer Friends</label>
+  </div>
   <input type="submit" class="btn btn-default" value="Submit">
 </form>
 TODO: add a check box for friends to the trip form
@@ -22,6 +30,49 @@ TODO: add a check box for friends to the trip form
 Have an option here to create a new trip.
 
 Template up to the first 3 results here.
+
+{% if friends_trips %}
+  <div class="jumbotron">
+    <h1>Trips with Friends</h1>
+    <ul class="list-group">
+      {% for trip in friends_trips %}
+      <a href="/t/{{ trip[0] }}" class="list-group-item"> {{ trip }} </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% if trips %}
+  <h1>More Trips</h1>
+  <ul class="list-group">
+    {% for trip in trips %}
+    <a href="/t/{{ trip[0] }}" class="list-group-item"> {{ trip }} </li>
+    {% endfor %}
+  </ul>
+
+  Template all trips here
+  {% else %}
+  {% endif %}
+{% else %}
+  {% if trips %}
+  <h1>Trips</h1>
+
+  <ul class="list-group">
+    {% for trip in trips %}
+    <div class="list-group-item clearfix">
+      <a href="/t/{{ trip[0] }}">
+        {{ trip }}
+        <a href="/t/{{ trip[0] }}/join"class="pull-right">
+          <button type="button" class="btn">Join Trip</button>
+        </a>
+      </a>
+    </div>
+    {% endfor %}
+  </ul>
+
+  Template All trips here
+  {% else %}
+  No Trips found. Create a new one? (add link)
+  {% endif %}
+{% endif %}
 
 At the bottom, have a button that says "Not finding what you're looking for?"
 

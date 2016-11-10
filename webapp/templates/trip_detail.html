@@ -1,5 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
+
+{% if trip %}
+<h1>Trip!</h1>
+<p>{{ trip }}</p>
+{% endif %}
+
+<p>
 The current status of your trip is:
 
 Not yet scheduled | Active since insert time here | Starting at insert time here | Done
@@ -7,5 +14,6 @@ Not yet scheduled | Active since insert time here | Starting at insert time here
 If its active, have a button to end the trip
 
 If the trip is done, have a button to +1 the trip
+</p>
 
 {% endblock%}
