@@ -1,10 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="page-header">
-  <h1><span>Find a trip</span> <span style="overflow: hidden; white-space: nowrap;"><small> Dare to have fun</small></span></h1>
-</div>
-
 <form class="" role="search" action="trip" method="get">
   <div class="input-group">
     <span class="input-group-addon" id="basic-addon1">from</span>
@@ -44,19 +40,11 @@
 {% else %}
   {% if trips %}
   <h1>Trips</h1>
-  <ul class="list-group">
+  <div class="list-group">
     {% for trip in trips %}
-    <div class="list-group-item clearfix">
-      <a href="/t/{{ trip[0] }}">
-        {{ trip }}
-        <a href="/t/{{ trip[0] }}/join"class="pull-right">
-          <button type="button" class="btn">Join Trip</button>
-        </a>
-      </a>
-    </div>
+      <a href="/t/{{ trip[0] }}" class="list-group-item"><span>{{ trip }} <button type="button" class="btn">Join Trip</button></span></a>
     {% endfor %}
-  </ul>
-  Template All trips here
+  </div>
   {% else %}
   No Trips found.
   {% endif %}
