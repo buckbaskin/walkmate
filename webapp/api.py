@@ -116,7 +116,7 @@ def tripDetailPage(shorttripid):
         trip = []
 
     if len(trip) <= 0:
-        if shorttripid == 'special_trip_id1':
+        if shorttripid == 'unscheduled_trip':
             return render_template('new_trip.html',
                 title1='W', title2='Finalize Trip Details',
                 trip=EXAMPLE_TRIP)
