@@ -138,6 +138,14 @@ def tripDetailPage(shorttripid):
             return render_template('trip_detail_active.html',
                 title1='W', title2='Trip Details',
                 trip=EXAMPLE_TRIP2)
+        if shorttripid == 'soon_trip':
+            return render_template('trip_detail_soon.html',
+                title1='W', title2='Trip Details',
+                trip=EXAMPLE_TRIP)
+        if shorttripid == 'done_trip':
+            return render_template('trip_detail_done.html',
+                title1='W', title2='Trip Details',
+                trip=EXAMPLE_TRIP)
         if shorttripid == 'special_trip_id':
             return render_template('trip_detail_active.html',
                 title1='W', title2='Trip Details',
