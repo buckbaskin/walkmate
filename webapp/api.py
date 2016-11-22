@@ -1,6 +1,7 @@
 from webapp import server as router
+from webapp.wordid import integer_to_wordset, wordset_to_integer
 
-from flask import render_template, request, redirect
+from flask import render_template, request, redirect, url_for
 
 import psycopg2
 
@@ -10,11 +11,28 @@ try:
 except:
     print('No Database.')
 
+EXAMPLE_TRIP2 = ('Tahitians.deities.Aachen', 'Fribley', 'Leutner', '12:15PM', 'specialuserid',)
 EXAMPLE_TRIP = ('special_trip_id', 'Leutner', 'Fribley', '3:00PM', 'specialuserid',)
 
 @router.route('/')
 def index():
     return render_template('index.html')
+
+@router.route('/new_trip')
+def new_trip():
+    from_ = request.args.get('trip-from')
+    to_ = request.args.get('trip-to')
+    at_ = request.args.get('trip-at')
+    if not (from_ and to_ and at_):
+        return render_template('new_trip.html',
+                title1='W', title2='Finalize Trip Details',
+                trip=EXAMPLE_TRIP)
+
+    # make a new trip here
+    db_uuid = 12345678910
+    nice_name = integer_to_wordset(int(db_uuid))
+    return redirect('/t/%s' % (nice_name,))
+
 
 @router.route('/trip', methods=['GET'])
 def tripfinder():
@@ -35,7 +53,7 @@ def tripfinder():
         trips = cur.fetchmany(3)
     except:
         trips = []
-        print('Database requets failed.')
+        print('Database requests failed.')
     
     if not from_ == '' and not to_ == '' and not at_ == '':
         message = 'The database results go here. We probably want to template a list.'
@@ -103,7 +121,7 @@ def joinTripPage(shorttripid):
 
 @router.route('/t/<shorttripid>', methods=['GET'])
 def tripDetailPage(shorttripid):
-    long_id = expandIdentifier(shorttripid)
+    long_id = wordset_to_integer(shorttripid)
 
     try:
         cur = conn.cursor()
@@ -116,16 +134,15 @@ def tripDetailPage(shorttripid):
         trip = []
 
     if len(trip) <= 0:
-        if shorttripid == 'unscheduled_trip':
-            return render_template('new_trip.html',
-                title1='W', title2='Finalize Trip Details',
-                trip=EXAMPLE_TRIP)
-
+        if shorttripid == 'Tahitians.deities.Aachen':
+            return render_template('trip_detail_active.html',
+                title1='W', title2='Trip Details',
+                trip=EXAMPLE_TRIP2)
         if shorttripid == 'special_trip_id':
-            return render_template('trip_detail.html',
+            return render_template('trip_detail_active.html',
                 title1='W', title2='Trip Details',
                 trip=EXAMPLE_TRIP)
         # no result
         return redirect('/trip')
     else:
-        return render_template('trip_detail.html', trip=trip)
+        return render_template('trip_detail_active.html', trip=trip)
