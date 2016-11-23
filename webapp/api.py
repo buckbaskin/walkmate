@@ -18,6 +18,20 @@ EXAMPLE_TRIP = ('special_trip_id', 'Leutner', 'Fribley', '3:00PM', 'specialuseri
 def index():
     return render_template('index.html')
 
+@router.route('/login')
+def login():
+    email = request.args.get('email')
+    password = request.args.get('password')
+    if not (email and password):
+        if not email:
+            email = ''
+        return render_template('login.html',
+                               title1='W', title2='Login',
+                               email=email)
+    else:
+        # do some login stuff
+        return redirect('/trip')
+
 @router.route('/new_trip')
 def new_trip():
     from_ = request.args.get('trip-from')
