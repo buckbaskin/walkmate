@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+
+<p>username: {{ username }}</p>
+<p>id number: {{ user_id }}</p>
+
+{% if logged_in %}
+<div class="jumbotron">
+  <h1>Hello {{first_name}}</h1>
+  <p><a class="btn btn-primary btn-lg" href="/u/{{username}}/edit" role="button">Edit Profile</a></p>
+</div>
+
+{% else %}
+<p>logged out</p>
+<div class="jumbotron">
+  <h1>{{first_name}} {{last_name}}</h1>
+</div>
+{% endif %}
+
+<p>{{description}}</p>
+<div class="list-group">
+{% for friend in friends %}
+  <a href="#" class="list-group-item">{{ friend }}</a>
+{% endfor %}
+  <a href="#" class="list-group-item">Morbi leo risus</a>
+  <a href="#" class="list-group-item">Porta ac consectetur ac</a>
+  <a href="#" class="list-group-item">Vestibulum at eros</a>
+</div>
+{% endblock%}

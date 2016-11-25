@@ -32,6 +32,28 @@ def login():
         # do some login stuff
         return redirect('/trip')
 
+@router.route('/u/<shortuserid>/edit')
+def edit_profile_page(shortuserid):
+    # TODO implement profile editing
+    return redirect('/u/%s' % (shortuserid,))
+
+@router.route('/u/<shortuserid>')
+def profile_page(shortuserid):
+    user_id = wordset_to_integer(shortuserid)
+    if shortuserid == 'logged.out':
+        logged_in=False
+    else:
+        logged_in = True
+    first_name = 'Jane'
+    last_name = 'Doe'
+    description = 'I am a fan of Walkmate'
+    list_of_up_to_five_friends = [('other_user1',), ('other_user2',)]
+    return render_template('profile.html',
+                           title1='W', title2='%s %s' % (first_name, last_name,),
+                           logged_in=logged_in, username=shortuserid, user_id=user_id,
+                           first_name=first_name, last_name=last_name,
+                           description=description, friends=list_of_up_to_five_friends)
+
 @router.route('/new_trip')
 def new_trip():
     from_ = request.args.get('trip-from')
