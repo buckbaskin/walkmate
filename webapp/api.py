@@ -1,7 +1,9 @@
 from webapp import server as router
 from webapp.wordid import integer_to_wordset, wordset_to_integer
+from webapp.users import User
 
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, abort
+from flask_login import login_required, login_user
 
 import psycopg2
 
@@ -14,25 +16,39 @@ except:
 EXAMPLE_TRIP2 = ('Tahitians.deities.Aachen', 'Fribley', 'Leutner', '12:15PM', 'specialuserid',)
 EXAMPLE_TRIP = ('special_trip_id', 'Leutner', 'Fribley', '3:00PM', 'specialuserid',)
 
+def is_safe_url(target):
+    # TODO implement this
+    return True
+
 @router.route('/')
 def index():
     return render_template('index.html')
 
-@router.route('/login')
+@router.route('/login', methods=['GET', 'POST'])
 def login():
-    email = request.args.get('email')
-    password = request.args.get('password')
-    if not (email and password):
-        if not email:
-            email = ''
-        return render_template('login.html',
-                               title1='W', title2='Login',
-                               email=email)
-    else:
-        # do some login stuff
-        return redirect('/trip')
+    email = request.form.get('email')
+    password = request.form.get('password')
+    if email and password:
+        password_correct = password == 'password'
+        if password_correct:
+            username = 'jane.doe'
+            user = User(username, 'Jane', 'Doe')
+            login_user(user)
+            next_ = request.values.get('next')
+            print('args: %s' % (request.values,))
+            print('next_: %s' % (next_,))
+
+            if not is_safe_url(next_):
+                return abort(400)
+            return redirect(next_ or url_for('index'))
+    if not email:
+        email = ''
+    return render_template('login.html',
+                           title1='W', title2='Login',
+                           email=email)
 
 @router.route('/u/<shortuserid>/edit')
+@login_required
 def edit_profile_page(shortuserid):
     # TODO implement profile editing
     return redirect('/u/%s' % (shortuserid,))
@@ -40,21 +56,18 @@ def edit_profile_page(shortuserid):
 @router.route('/u/<shortuserid>')
 def profile_page(shortuserid):
     user_id = wordset_to_integer(shortuserid)
-    if shortuserid == 'logged.out':
-        logged_in=False
-    else:
-        logged_in = True
     first_name = 'Jane'
     last_name = 'Doe'
     description = 'I am a fan of Walkmate'
     list_of_up_to_five_friends = [('other_user1',), ('other_user2',)]
     return render_template('profile.html',
                            title1='W', title2='%s %s' % (first_name, last_name,),
-                           logged_in=logged_in, username=shortuserid, user_id=user_id,
+                           username=shortuserid, user_id=user_id,
                            first_name=first_name, last_name=last_name,
                            description=description, friends=list_of_up_to_five_friends)
 
 @router.route('/new_trip')
+@login_required
 def new_trip():
     from_ = request.args.get('trip-from')
     to_ = request.args.get('trip-to')
@@ -151,6 +164,7 @@ def compressIdentifier(longIdentifier):
     return longIdentifier
 
 @router.route('/t/<shorttripid>/join', methods=['GET'])
+@login_required
 def joinTripPage(shorttripid):
     # TODO implement joining a trip
     return redirect('/t/%s' % (shorttripid,))
