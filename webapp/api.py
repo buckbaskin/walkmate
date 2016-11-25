@@ -32,20 +32,22 @@ def login():
         password_correct = password == 'password'
         if password_correct:
             username = 'jane.doe'
-            user = User(username, 'Jane', 'Doe')
+            user = User.build(username)
             login_user(user)
             next_ = request.values.get('next')
             print('args: %s' % (request.values,))
             print('next_: %s' % (next_,))
 
-            if not is_safe_url(next_):
-                return abort(400)
             return redirect(next_ or url_for('index'))
     if not email:
         email = ''
+    next_ = request.values.get('next')
+    if not (next_ is not None and is_safe_url(next_)):
+        next_ = '/'
+            
     return render_template('login.html',
                            title1='W', title2='Login',
-                           email=email)
+                           email=email, next=next_)
 
 @router.route('/u/<shortuserid>/edit')
 @login_required
