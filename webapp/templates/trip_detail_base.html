@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% if trip %}
+<h1>Trip!</h1>
+<p>{{ trip }}</p>
+{% endif %}
+
+{% block detailcontent%}{% endblock %}
+
+{% endblock%}

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<form class="" role="search" action="login" method="get">
+<div class="input-group">
+<span class="input-group-addon" id="basic-addon1">email</span>
+<input type="text" id="email" name="email" value="{{email_}}" class="form-control" placeholder="example@case.edu" aria-describedby="basic-addon1">
+</div>
+<div class="input-group">
+<span class="input-group-addon" id="basic-addon2">password</span>
+<input type="text" id="password" name="password" value="" class="form-control" placeholder="password" aria-describedby="basic-addon2">
+</div>
+<input type="submit" class="btn btn-default" value="Login">
+</form>
+{% endblock%}

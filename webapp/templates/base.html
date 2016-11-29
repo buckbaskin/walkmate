@@ -1,0 +1,47 @@
+<html>
+<head>
+  {% if title1 and title2 %}
+  <title>{{ title1}} | {{ title2 }}</title>
+  {% else %}
+  <title>Walkmate</title>
+  {% endif %}
+  <link href="/static/walkmate.css" rel="stylesheet" type="text/css">
+  <link href="/static/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        {% if title1 and title2 %}
+        <title>{{ title1 }} | {{ title2 }}</title>
+        <span class="navbar-brand"><a href="/">{{ title1 }}</a> | <a href="#">{{ title2 }}</a></span>
+        {% else %}
+        <a class="navbar-brand" href="/">Walkmate</a>
+        {% endif %}
+      </div>
+
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+          <li><a href="/trip">Find a Trip</a></li>
+          <li><a href="/profile">Edit Profile</a></li>
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+  </nav>
+  <div class="container-fluid">
+    {% block content%}{% endblock %}
+  </div>
+  <script type="text/javascript" src="/static/frontend.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script type="text/javascript" src="/static/bootstrap/js/bootstrap.js"></script>
+</body>
+</html>
