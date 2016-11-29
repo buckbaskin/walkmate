@@ -34,3 +34,4 @@ def createNewUser(username, hashed_password, first_name, last_name):
 
 if __name__ == '__main__':
     main()
+
