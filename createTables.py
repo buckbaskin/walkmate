@@ -49,3 +49,4 @@ PRIMARY KEY(tripid, uuuid),
 FORIEGN KEY(tripid) REFERENCES TRIPS(tripid),
 FORIEGN KEY(uuuid) REFERENCES USERS(uuuid));''')
 except:
+    pass
