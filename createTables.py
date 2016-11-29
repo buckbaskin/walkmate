@@ -50,3 +50,4 @@ FORIEGN KEY(tripid) REFERENCES TRIPS(tripid),
 FORIEGN KEY(uuuid) REFERENCES USERS(uuuid));''')
 except:
     pass
+print('hello world')
