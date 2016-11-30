@@ -40,7 +40,6 @@ FORIEGN KEY(end_destination) REFERENCES DESTINATIONS(did));''')
 except:
     pass
 try:
-    try:
     cur.execute('''
 CREATE TABLE MEMBERS
 (tripid uuid NOT NULL,
@@ -50,4 +49,22 @@ FORIEGN KEY(tripid) REFERENCES TRIPS(tripid),
 FORIEGN KEY(uuuid) REFERENCES USERS(uuuid));''')
 except:
     pass
-print('hello world')
+try:
+    cur.execute('''
+CREATE TABLE DESTINATIONS
+(did uuid NOT NULL PRIMARY KEY,
+dname varchar NOT NULL,
+area_of_campus varchar);''')
+except:
+    pass
+try:
+    cur.execute('''
+CREATE TABLE RATINGS
+(raterid uuid NOT NULL,
+rateeid uuid NOT NULL,
+rating integer NOT NULL
+PRIMARY KEY(raterid, rateeid),
+FORIEGN KEY(raterid) REFERENCES USERS(uuuid),
+FORIEGN KEY(rateeid) REFERENCES USERS(uuuid));''')
+except:
+    pass
