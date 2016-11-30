@@ -2,4 +2,5 @@ pip
 setuptools
 
 flask
+flask-login
 psycopg2

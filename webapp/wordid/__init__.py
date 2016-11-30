@@ -40,5 +40,7 @@ def wordset_to_integer(wordset):
     for index, word in enumerate(words):
         if word in words_backward:
             accum += words_backward[word] * math.pow(len(words_backward), index)
+        else:
+            return -1
 
     return int(accum)

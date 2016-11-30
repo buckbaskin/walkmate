@@ -4,7 +4,7 @@
 <p>username: {{ username }}</p>
 <p>id number: {{ user_id }}</p>
 
-{% if logged_in %}
+{% if current_user.is_authenticated %}
 <div class="jumbotron">
   <h1>Hello {{first_name}}</h1>
   <p><a class="btn btn-primary btn-lg" href="/u/{{username}}/edit" role="button">Edit Profile</a></p>
