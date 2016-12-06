@@ -21,4 +21,4 @@ def joinTrip(did,uuuid):
             createTables.createAll()
             cur.execute(query,data)
         else:
-            pass 
+            raise 
