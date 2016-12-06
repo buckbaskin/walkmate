@@ -35,6 +35,8 @@ def login():
 @router.route('/u/<shortuserid>/edit')
 def edit_profile_page(shortuserid):
     # TODO implement profile editing
+    # TODO Write an update for a user into the database. There should be two queries, one to check if the user is there
+    #     then another one to write the changes.
     return redirect('/u/%s' % (shortuserid,))
 
 @router.route('/u/<shortuserid>')
@@ -68,6 +70,9 @@ def new_trip():
                 trip=EXAMPLE_TRIP)
 
     # make a new trip here
+    # TODO Write in the new create trip here.
+    
+    # TODO Get the db_uuid for the new trip
     db_uuid = 12345678910
     nice_name = integer_to_wordset(int(db_uuid))
     return redirect('/t/%s' % (nice_name,))
@@ -87,22 +92,24 @@ def tripfinder():
     try:
         cur = conn.cursor()
 
-        cur.execute("""SELECT * FROM trips""")
+        if not from_ == '':
+            # TODO Get trips that match the from/to/at request
+            pass
+        else:
+            # TODO Get all trips (this might be good here, but not sorted by nearest in time for example)
+            cur.execute("""SELECT * FROM trips""")
 
         trips = cur.fetchmany(3)
     except:
         trips = []
         print('Database requests failed.')
     
-    if not from_ == '' and not to_ == '' and not at_ == '':
-        message = 'The database results go here. We probably want to template a list.'
-    else:
+    if from_ == '' or to_ == '' or at_ == '':
         message = 'Can you provide more information?'
         trips = []
+    else:
+        message = ''
 
-    if trips == []:
-        trips = [EXAMPLE_TRIP]
-    
     return render_template('find_trip.html',
         title1='W', title2='Find a Trip',
         from_=from_, to_=to_, at_=at_, message=message, 
