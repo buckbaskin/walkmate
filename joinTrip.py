@@ -14,6 +14,7 @@ except:
 def joinTrip(did,uuuid):
     query = 'INSERT INTO MEMBERS(did, uuuid) Values (%s,%s)';
     data = (did, uuuid)
+    errorflag = False
     try:
         cur.execute(query,data)
     except pyscopg2.Error as e:
@@ -21,4 +22,7 @@ def joinTrip(did,uuuid):
             createTables.createAll()
             cur.execute(query,data)
         else:
-            raise 
+            raise
+            errorflag = True
+    try:
+        query = '''UPDATE TRIPS 
