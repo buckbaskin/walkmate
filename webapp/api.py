@@ -44,6 +44,9 @@ def profile_page(shortuserid):
         logged_in=False
     else:
         logged_in = True
+    # TODO make a query here to find a single user with the userid matching the shortuserid here
+    # note: This shortuserid will be words that represent the id, so before the query, the id
+    #       needs to be converted to an integer first.
     first_name = 'Jane'
     last_name = 'Doe'
     description = 'I am a fan of Walkmate'
