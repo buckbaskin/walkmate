@@ -1,6 +1,7 @@
 import psycopg2
 import uuid
 import datetime
+import createTables
 
 # make a connection
 try:
@@ -11,8 +12,13 @@ except:
     raise
 
 def joinTrip(did,uuuid):
+    query = 'INSERT INTO MEMBERS(did, uuuid) Values (%s,%s)';
+    data = (did, uuuid)
     try:
-        query = 'INSERT INTO MEMBERS(did, uuuid) Values (%s,%s)';
-        data = (did, uuuid)
-    except:
-        
+        cur.execute(query,data)
+    except pyscopg2.Error as e:
+        if e.pgcode == '42P01':
+            createTables.createAll()
+            cur.execute(query,data)
+        else:
+            pass 
