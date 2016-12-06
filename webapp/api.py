@@ -129,40 +129,34 @@ def loadMoreTrips():
     try:
         cur = conn.cursor()
 
-        cur.execute("""SELECT * FROM trips""")
+        if not from_ == '':
+            # TODO Get trips that match the from/to/at request
+            pass
+        else:
+            # TODO Get all trips (this might be good here, but not sorted by nearest in time for example)
+            cur.execute("""SELECT * FROM trips""")
 
         trips = cur.fetchmany(10)
     except:
         trips = []
-        print('Database requets failed.')
+        print('Database requests failed.')
     
-    if not from_ == '' and not to_ == '' and not at_ == '':
-        message = 'The database results go here. We probably want to template a list.'
-    else:
+    if from_ == '' or to_ == '' or at_ == '':
         message = 'Can you provide more information?'
         trips = []
-
-    if trips == []:
-        trips = [EXAMPLE_TRIP]
+    else:
+        message = ''
     
     return render_template('find_trip.html', 
         title1='W', title2='Find More Trips',
         from_=from_, to_=to_, at_=at_, message=message, 
         friend_trips=[], trips=trips)
 
-def expandIdentifier(shortIdentifier):
-    # TODO maybe implement this
-    # Maybe just make a short id for everything when it is inserted into db
-    return shortIdentifier
-
-def compressIdentifier(longIdentifier):
-    # TODO maybe implement this
-    # Maybe just make a short id for everything when it is inserted into db
-    return longIdentifier
-
 @router.route('/t/<shorttripid>/join', methods=['GET'])
 def joinTripPage(shorttripid):
     # TODO implement joining a trip
+    # TODO GET trip to check if it exists
+    # TODO Write user to trip
     return redirect('/t/%s' % (shorttripid,))
 
 @router.route('/t/<shorttripid>', methods=['GET'])
@@ -172,6 +166,7 @@ def tripDetailPage(shorttripid):
     try:
         cur = conn.cursor()
 
+        # TODO fix this. Get trips that match the trip id, and take the first one
         cur.execute('''SELECT * FROM trips WHERE id = %s OR short_id = %s''',
             (long_id, shorttripid,))
 
@@ -179,6 +174,7 @@ def tripDetailPage(shorttripid):
     except:
         trip = []
 
+    # TODO remove these: They are special cases for helping with creating templates
     if len(trip) <= 0:
         if shorttripid == 'Tahitians.deities.Aachen':
             return render_template('trip_detail_active.html',
@@ -199,4 +195,5 @@ def tripDetailPage(shorttripid):
         # no result
         return redirect('/trip')
     else:
+        # TODO use this render template
         return render_template('trip_detail_active.html', trip=trip)
