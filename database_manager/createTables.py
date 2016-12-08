@@ -1,5 +1,5 @@
 import psycopg2
-
+def createAll():
 # make a connection
 try:
     conn = psycopg2.connect(database='postgres', user='postgres', password='economicalchinchillacorndog', host='localhost')
