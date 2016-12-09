@@ -12,3 +12,9 @@
 [2016-12-09 13:13:17 -0500] [12999] [ERROR] Retrying in 1 second.
 [2016-12-09 13:13:18 -0500] [12999] [ERROR] Retrying in 1 second.
 [2016-12-09 13:13:19 -0500] [12999] [ERROR] Can't connect to ('0.0.0.0', 80)
+[2016-12-09 13:17:58 -0500] [13563] [INFO] Starting gunicorn 19.6.0
+[2016-12-09 13:17:58 -0500] [13563] [INFO] Listening at: http://127.0.0.1:8000 (13563)
+[2016-12-09 13:17:58 -0500] [13563] [INFO] Using worker: sync
+[2016-12-09 13:17:58 -0500] [13566] [INFO] Booting worker with pid: 13566
+[2016-12-09 13:17:58 -0500] [13567] [INFO] Booting worker with pid: 13567
+[2016-12-09 13:17:58 -0500] [13568] [INFO] Booting worker with pid: 13568
