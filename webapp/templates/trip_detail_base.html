@@ -1,11 +1,32 @@
 {% extends "base.html" %}
 {% block content %}
 
-{% if trip %}
 <h1>Trip!</h1>
 <p>{{ trip }}</p>
-{% endif %}
 
 {% block detailcontent%}{% endblock %}
+
+{% if user_list %}
+<h1>These are the users currently on the trip</h1>
+<div class="list-group">
+{% for user in user_list %}
+  <a href="/u/{{ user[1] }}" class="list-group-item">{{ user[0] }}</a>
+{% endfor %}
+  <a href="/u/abc123" class="list-group-item">Morbi leo risus</a>
+  <a href="/u/abc124" class="list-group-item">Porta ac consectetur ac</a>
+  <a href="/u/abc125" class="list-group-item">Vestibulum at eros</a>
+</div>
+
+To join them, add your name
+
+<form class="" role="search" action="/t/{{ trip[0] }}/join" method="post">
+  <div class="input-group">
+    <span class="input-group-addon" id="basic-addon4">case id</span>
+    <input type="text" id="caseid" name="caseid" value="{{caseid}}" class="form-control" placeholder="abc123" aria-describedby="basic-addon4">
+  </div>
+  <input type="submit" class="btn btn-default" value="Join Trip">
+</form>
+
+{% endif %}
 
 {% endblock%}

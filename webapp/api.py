@@ -32,13 +32,6 @@ def login():
         # do some login stuff
         return redirect('/trip')
 
-@router.route('/u/<shortuserid>/edit')
-def edit_profile_page(shortuserid):
-    # TODO implement profile editing
-    # TODO Write an update for a user into the database. There should be two queries, one to check if the user is there
-    #     then another one to write the changes.
-    return redirect('/u/%s' % (shortuserid,))
-
 @router.route('/u/<shortuserid>')
 def profile_page(shortuserid):
     user_id = wordset_to_integer(shortuserid)
@@ -152,15 +145,34 @@ def loadMoreTrips():
         from_=from_, to_=to_, at_=at_, message=message, 
         friend_trips=[], trips=trips)
 
-@router.route('/t/<shorttripid>/join', methods=['GET'])
+@router.route('/t/<shorttripid>/join', methods=['POST'])
 def joinTripPage(shorttripid):
     # TODO implement joining a trip
     # TODO GET trip to check if it exists
     # TODO Write user to trip
+    long_id = wordset_to_integer(shorttripid)
+    try:
+        cur = conn.cursor()
+        cur.execute('''SELECT * FROM trips WHERE id = %s OR short_id = %s''',
+            (long_id, shorttripid,))
+        trip_exists = len(cur.fetchmany(1)) > 0
+    except:
+        trip_exists = False
+    if not trip_exists:
+        return redirect('/trip')
+
+    caseid = request.args.get('caseid')
+    if caseid is not None:
+        # TODO add it to the trip
+        pass
+
     return redirect('/t/%s' % (shorttripid,))
+
+
 
 @router.route('/t/<shorttripid>', methods=['GET'])
 def tripDetailPage(shorttripid):
+    # TODO add a join trip button with a case id field
     long_id = wordset_to_integer(shorttripid)
 
     try:
@@ -176,23 +188,25 @@ def tripDetailPage(shorttripid):
 
     # TODO remove these: They are special cases for helping with creating templates
     if len(trip) <= 0:
+        print('I have reached a special case')
         if shorttripid == 'Tahitians.deities.Aachen':
             return render_template('trip_detail_active.html',
                 title1='W', title2='Trip Details',
                 trip=EXAMPLE_TRIP2)
-        if shorttripid == 'soon_trip':
+        elif shorttripid == 'soon_trip':
             return render_template('trip_detail_soon.html',
                 title1='W', title2='Trip Details',
-                trip=EXAMPLE_TRIP)
-        if shorttripid == 'done_trip':
+                trip=EXAMPLE_TRIP, user_list=[('Jane', 'jan2',), ('John', 'joh3',)])
+        elif shorttripid == 'done_trip':
             return render_template('trip_detail_done.html',
                 title1='W', title2='Trip Details',
-                trip=EXAMPLE_TRIP)
-        if shorttripid == 'special_trip_id':
+                trip=EXAMPLE_TRIP, user_list=[('Jane', 'jan2',), ('John', 'joh3',)])
+        elif shorttripid == 'active_trip':
             return render_template('trip_detail_active.html',
                 title1='W', title2='Trip Details',
-                trip=EXAMPLE_TRIP)
+                trip=EXAMPLE_TRIP, user_list=[('Jane', 'jan2',), ('John', 'joh3',)])
         # no result
+        print('shorttripid = %s' % (shorttripid,))
         return redirect('/trip')
     else:
         # TODO use this render template

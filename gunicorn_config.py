@@ -18,4 +18,4 @@ graceful_timeout = 20
 timeout = 30
 
 # error log
-errorlog = 'logging/ErrLogFile'
+# errorlog = 'logging/ErrLogFile'

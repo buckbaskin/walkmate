@@ -18,3 +18,8 @@
 [2016-12-09 13:17:58 -0500] [13566] [INFO] Booting worker with pid: 13566
 [2016-12-09 13:17:58 -0500] [13567] [INFO] Booting worker with pid: 13567
 [2016-12-09 13:17:58 -0500] [13568] [INFO] Booting worker with pid: 13568
+[2016-12-09 13:37:20 -0500] [13563] [INFO] Handling signal: int
+[2016-12-09 13:37:20 -0500] [13567] [INFO] Worker exiting (pid: 13567)
+[2016-12-09 13:37:20 -0500] [13566] [INFO] Worker exiting (pid: 13566)
+[2016-12-09 13:37:20 -0500] [13568] [INFO] Worker exiting (pid: 13568)
+[2016-12-09 13:37:20 -0500] [13563] [INFO] Shutting down: Master
