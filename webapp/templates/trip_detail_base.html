@@ -7,7 +7,7 @@
 {% block detailcontent%}{% endblock %}
 
 {% if user_list %}
-<h1>These are the users currently on the trip</h1>
+<h2>Participants</h2>
 <div class="list-group">
 {% for user in user_list %}
   <a href="/u/{{ user[1] }}" class="list-group-item">{{ user[0] }}</a>
@@ -16,8 +16,6 @@
   <a href="/u/abc124" class="list-group-item">Porta ac consectetur ac</a>
   <a href="/u/abc125" class="list-group-item">Vestibulum at eros</a>
 </div>
-
-To join them, add your name
 
 <form class="" role="search" action="/t/{{ trip[0] }}/join" method="post">
   <div class="input-group">
