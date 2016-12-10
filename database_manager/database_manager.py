@@ -8,3 +8,5 @@ def prepareDatabase():
 	deleteTables.deleteAll(cur)
 	createTables.createAll(cur)
 	populateTables.populateAll(cur)
+	cur.commit()
+	cur.close()

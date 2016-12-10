@@ -61,3 +61,4 @@ FORIEGN KEY(raterid) REFERENCES USERS(caseid),
 FORIEGN KEY(rateeid) REFERENCES USERS(caseid));''')
 	except:
     	pass
+    cur.commit()
