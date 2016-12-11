@@ -3,3 +3,5 @@ setuptools
 
 flask
 psycopg2
+
+gunicorn
