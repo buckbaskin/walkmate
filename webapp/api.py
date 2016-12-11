@@ -1,5 +1,6 @@
 from webapp import server as router
 from webapp.wordid import integer_to_wordset, wordset_to_integer
+# from webapp.database import joinTrip
 
 from flask import render_template, request, redirect, url_for
 
@@ -18,7 +19,7 @@ EXAMPLE_TRIP = ('special_trip_id', 'Leutner', 'Fribley', '3:00PM', 'specialuseri
 def index():
     return render_template('index.html')
 
-@router.route('/login')
+# @router.route('/login')
 def login():
     email = request.args.get('email')
     password = request.args.get('password')
@@ -32,13 +33,8 @@ def login():
         # do some login stuff
         return redirect('/trip')
 
-@router.route('/u/<shortuserid>')
-def profile_page(shortuserid):
-    user_id = wordset_to_integer(shortuserid)
-    if shortuserid == 'logged.out':
-        logged_in=False
-    else:
-        logged_in = True
+@router.route('/u/<caseid>')
+def profile_page(caseid):
     # TODO make a query here to find a single user with the userid matching the shortuserid here
     # note: This shortuserid will be words that represent the id, so before the query, the id
     #       needs to be converted to an integer first.

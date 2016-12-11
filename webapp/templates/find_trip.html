@@ -2,6 +2,14 @@
 {% block content %}
 
 <form class="" role="search" action="trip" method="get">
+  <label for="sel1">Select list:</label>
+  <select class="form-control" id="sel1">
+    
+    <option>1</option>
+    <option>2</option>
+    <option>3</option>
+    <option>4</option>
+  </select>
   <div class="input-group">
     <span class="input-group-addon" id="basic-addon1">from</span>
     <input type="text" id="trip-from" name="trip-from" value="{{from_}}" class="form-control" placeholder="Starting Location" aria-describedby="basic-addon1">
