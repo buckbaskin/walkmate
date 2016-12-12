@@ -115,7 +115,9 @@ def getSpecificTrips(conn, size, start_destination, end_destination, start_time,
     cur.execute('''
         SELECT T.tripid, D1.dname, D2.dname, T.start_time
         FROM TRIPS as T, Destinations as D1, Destinations as D2
-        WHERE D1.did = T.start_destination AND D2.did = T.end_destination AND T.start_destination = %s AND T.end_destination = %s AND T.start_time > %s AND T.start_time < %s''', (start_destination, end_destination, start_time, end_time)
+        WHERE D1.did = T.start_destination AND D2.did = T.end_destination AND T.start_destination = %s AND T.end_destination = %s AND T.start_time > %s AND T.start_time < %s''', (start_destination, end_destination, start_time, end_time))
+    
+    
     for tuple_ in cur.fetchmany(size):
         yield (tuple_[0], tuple_[1], tuple_[2], tuple_[3], tuple_[-1].hour, tuple_[-1].minute)
 
