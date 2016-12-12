@@ -1,16 +1,19 @@
+import uuid
+import psycopg2
 def getAllDestinations(conn):
     cur = conn.cursor()
     cur.execute('SELECT * FROM DESTINATIONS')
     return cur.fetchall()
 # Git anchor
-def createNewTrip(con, cur, caseid,start_destination,end_destination,start_time):
+def createNewTrip(conn, caseid,start_destination,end_destination,start_time):
+    cur = conn.cursor()
     tripid = uuid.uuid4().hex
     errorflag = False
     try:
-        query1 = "INSERT INTO TRIPS (tripid, start_destination, end_destination, start_time, number_partipants)"
+        query1 = "INSERT INTO TRIPS (tripid, start_destination, end_destination, start_time, number_participants) VALUES (%s,%s,%s,%s,%s)"
         data1 = (tripid, start_destination, end_destination, start_time, 1)
         cur.execute(query1,data1)
-    except pyscopg2.Error as e:
+    except psycopg2.Error as e:
         if e.pgcode == '42P01':
             createTables.createAll()
             cur.execute(query1,data1)
@@ -26,7 +29,7 @@ def createNewTrip(con, cur, caseid,start_destination,end_destination,start_time)
             errorflag = True
             raise
     try:
-        query2 = "INSERT INTO MEMBERS (tripid, caseid)"
+        query2 = "INSERT INTO MEMBERS (tripid, caseid) VALUES (%s, %s)"
         data2 = (tripid, caseid)
         cur.execute(query2,data2)
     except:    
