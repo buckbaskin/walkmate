@@ -1,6 +1,6 @@
 from webapp import server as router
 from webapp.wordid import integer_to_wordset, wordset_to_integer
-# from webapp.database import joinTrip
+import webapp.database as database
 
 from flask import render_template, request, redirect, url_for
 
@@ -78,34 +78,14 @@ def tripfinder():
         at_ = ''
     prefer_friends = request.args.get('friends')
     
-    try:
-        cur = conn.cursor()
-
-        if not from_ == '':
-            # TODO Get trips that match the from/to/at request
-            pass
-        else:
-            # TODO Get all trips (this might be good here, but not sorted by nearest in time for example)
-            cur.execute("""SELECT * FROM trips""")
-
-        trips = cur.fetchmany(3)
-    except:
-        trips = []
-        print('Database requests failed.')
-    
-    if from_ == '' or to_ == '' or at_ == '':
-        message = 'Can you provide more information?'
-        trips = []
-    else:
-        message = ''
-
-    destinations = database.getAllDestinations(conn, cur)
+    trips = database.getAllTrips(conn, 3)
+    destinations = database.getAllDestinations(conn)
     print(destinations)
 
     return render_template('find_trip.html',
         title1='W', title2='Find a Trip',
         destinations=destinations,
-        from_=from_, to_=to_, at_=at_, message=message, 
+        from_=from_, to_=to_, at_=at_,
         friend_trips=[], trips=trips)
 
 @router.route('/trip_more', methods=['GET'])
@@ -173,14 +153,14 @@ def joinTripPage(shorttripid):
 @router.route('/t/<shorttripid>', methods=['GET'])
 def tripDetailPage(shorttripid):
     # TODO add a join trip button with a case id field
-    long_id = wordset_to_integer(shorttripid)
+    long_id = shorttripid
 
     try:
         cur = conn.cursor()
 
         # TODO fix this. Get trips that match the trip id, and take the first one
-        cur.execute('''SELECT * FROM trips WHERE id = %s OR short_id = %s''',
-            (long_id, shorttripid,))
+        cur.execute('''SELECT * FROM TRIPS WHERE tripid = %s''',
+            (long_id,))
 
         trip = cur.fetchmany(1)
     except:
