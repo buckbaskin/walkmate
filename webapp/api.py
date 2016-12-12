@@ -26,6 +26,7 @@ def profile_page(caseid):
     first_name = user[2]
     last_name = user[3]
     trips = database.getUserTrips(conn, caseid)
+    print('trips'+str(trips ))
     return render_template('profile.html',
                            title1='W', title2='%s %s' % (first_name, last_name,),
                            username=caseid, trips=trips,
@@ -114,6 +115,7 @@ def joinTripPage(shorttripid):
 
     caseid = request.args.get('caseid')
     if caseid is not None:
+        print('add user %s to trip %s' % (caseid, tripid,))
         database.addToTrip(conn, tripid, caseid)
 
     return redirect('/t/%s' % (shorttripid,))
@@ -146,7 +148,7 @@ def tripDetailPage(shorttripid):
         return redirect('/trip')
     else:
         # TODO get list of users for the trip
-        user_list = [('Jane', 'jan2')]
+        user_list = database.getUserByTrip(conn, shorttripid)
         # TODO check time and use a different template
         print('trip tuple: %s' % (trips,))
         return render_template('trip_detail_active.html', trip=trips[0], user_list=user_list)
