@@ -106,6 +106,7 @@ def joinTripPage(shorttripid):
 
     caseid = request.args.get('caseid')
     if caseid is not None:
+        print('add user %s to trip %s' % (caseid, tripid,))
         database.addToTrip(conn, tripid, caseid)
 
     return redirect('/t/%s' % (shorttripid,))
