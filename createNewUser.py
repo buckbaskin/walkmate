@@ -12,7 +12,7 @@ except:
 
 def createNewUser(username, hashed_password, first_name, last_name):
     try:
-        uuuid = uuid.uuid.uuid4().hex
+        uuuid = uuid.uuid4().hex
         date_joined = datetime.datetime.utcnow()
         query = "INSERT INTO USERS (uuuid, username, hashed_password, first_name, last_name, date_joined) VALUES (%s, %s, %s, %s, %s, %s);"
         data = (uuuid, username, hashed_password, first_name, last_name, date_joined)
@@ -20,7 +20,7 @@ def createNewUser(username, hashed_password, first_name, last_name):
     except:
         print('Possible uuid error, trying again')
         try:
-            uuuid = uuid.uuid.uuid4().hex
+            uuuid = uuid.uuid4().hex
             query = "INSERT INTO USERS (uuuid, username, hashed_password, first_name, last_name, date_joined) VALUES (%s, %s, %s, %s, %s, %s);"
             data = (uuuid, username, hashed_password, first_name, last_name, date_joined)
             cur.execute(query,data)
@@ -28,7 +28,7 @@ def createNewUser(username, hashed_password, first_name, last_name):
             print('Database insertion error, most likely not uuid collision')
             raise
     
-    cur.commit()
+    conn.commit()
     cur.close()
 
 
