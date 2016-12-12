@@ -3,7 +3,7 @@ Gunicorn Configuration Variables
 '''
 
 bind = "localhost:8000"
-workers = 3 # The number of worker processes for handling requests.
+workers = 1 # The number of worker processes for handling requests.
 
 backlog = 64 # The maximum number of pending connections.
 
