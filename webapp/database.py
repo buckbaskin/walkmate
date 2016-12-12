@@ -103,3 +103,15 @@ def addToTrip(conn, tripid, caseid):
     cur = conn.cursor()
     #  TODO ... implement
     return True
+
+# Git Anchor
+
+def getUserByTrip(conn, tripid):
+    cur = conn.cursor()
+    cur.execute('''
+        SELECT U.*
+        FROM USERS as U, TRIPS as T, MEMBERS as M
+        WHERE T.tripid = %s AND M.tripid = T.tripid AND U.caseid = M.caseid
+        ''', (tripid,))
+
+    return cur.fetchall()

@@ -12,9 +12,6 @@
 {% for user in user_list %}
   <a href="/u/{{ user[1] }}" class="list-group-item">{{ user[0] }}</a>
 {% endfor %}
-  <a href="/u/abc123" class="list-group-item">Morbi leo risus</a>
-  <a href="/u/abc124" class="list-group-item">Porta ac consectetur ac</a>
-  <a href="/u/abc125" class="list-group-item">Vestibulum at eros</a>
 </div>
 
 <form class="" role="search" action="/t/{{ trip[0] }}/join" method="post">

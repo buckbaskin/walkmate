@@ -133,7 +133,7 @@ def tripDetailPage(shorttripid):
         return redirect('/trip')
     else:
         # TODO get list of users for the trip
-        user_list = [('Jane', 'jan2')]
+        user_list = database.getUserByTrip(conn, shorttripid)
         # TODO check time and use a different template
         print('trip tuple: %s' % (trips,))
         return render_template('trip_detail_active.html', trip=trips[0], user_list=user_list)
