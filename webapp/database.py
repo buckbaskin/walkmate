@@ -105,7 +105,7 @@ def checkTripExists(conn, tripid):
 
 def addToTrip(conn, tripid, caseid):
     cur = conn.cursor()
-    #  TODO ... implement
+    cur.execute('''INSERT INTO MEMBERS(tripid, caseid) VALUES(tripid, caseid))''')
     return True
 
 # Git Anchor
@@ -119,3 +119,19 @@ def getUserByTrip(conn, tripid):
         ''', (tripid,))
 
     return cur.fetchall()
+
+# Git anchor
+
+def getTripMembers(conn, tripid):
+    cur = conn.cursor()
+    cur.execute('''SELECT [COUNT] * FROM MEMBERS WHERE tripid = %s'''(tripid,))
+    return cur.fetchall()
+
+# Git anchor
+
+def getTripInfo(conn, tripid):
+    cur = conn.cursor()
+    cur.execute('''SELECT * FROM TRIPS WHERE tripid = %s'''(tripid,))
+    return trip_info
+
+# Git anchor
