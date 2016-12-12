@@ -80,11 +80,12 @@ def getUser(conn, caseid):
 # Git anchor
 
 def getUserTrips(conn, caseid):
+    print('getUserTrips(%s)' % (caseid,))
     cur = conn.cursor()
     cur.execute('''
-        SELECT T.*
-        FROM TRIPS as T, MEMBERS as M
-        WHERE M.tripid = T.tripid AND M.caseid = %s
+        SELECT T.tripid, D1.dname, D2.dname
+        FROM USERS as U, TRIPS as T, MEMBERS as M, DESTINATIONS as D1, DESTINATIONS as D2
+        WHERE U.caseid = %s AND M.tripid = T.tripid AND U.caseid = M.caseid AND T.start_destination = D1.did AND T.end_destination = D2.did
         ''', (caseid,))
     return cur.fetchall()
 

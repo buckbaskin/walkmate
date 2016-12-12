@@ -25,6 +25,7 @@ def profile_page(caseid):
     first_name = user[2]
     last_name = user[3]
     trips = database.getUserTrips(conn, caseid)
+    print('trips'+str(trips ))
     return render_template('profile.html',
                            title1='W', title2='%s %s' % (first_name, last_name,),
                            username=caseid, trips=trips,

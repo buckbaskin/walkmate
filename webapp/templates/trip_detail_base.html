@@ -10,7 +10,7 @@
 <h2>Participants</h2>
 <div class="list-group">
 {% for user in user_list %}
-  <a href="/u/{{ user[1] }}" class="list-group-item">{{ user[0] }}</a>
+  <a href="/u/{{ user[0] }}" class="list-group-item">{{ user[2] }} {{ user[3] }}</a>
 {% endfor %}
 </div>
 
