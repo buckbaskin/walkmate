@@ -1,6 +1,5 @@
 import psycopg2
 def createAll(conn, cur):
-    print('createAll')
     try:
         cur.execute('''
 CREATE TABLE USERS
@@ -9,9 +8,6 @@ hashed_raiseword varchar NOT NULL,
 first_name varchar NOT NULL,
 last_name varchar NOT NULL,
 date_joined timestamp NOT NULL);''')
-        conn.commit()
-        cur.execute('SELECT * FROM USERS')
-        print(cur.fetchone())
     except:
         raise
     try:
@@ -64,11 +60,21 @@ PRIMARY KEY(tripid, uuuid));''')
         raise
     try:
         cur.execute('''
-CREATE TABLE RATINGS
+CREATE TABLE USERRATINGS
 (raterid varchar NOT NULL REFERENCES USERS(caseid),
 rateeid varchar NOT NULL REFERENCES USERS(caseid),
 rating integer NOT NULL,
 PRIMARY KEY (raterid, rateeid));''')
+        conn.commit()
+    except:
+        raise
+    conn.commit()
+    try:
+        cur.execute('''
+CREATE TABLE TRIPRATINGS
+(raterid varchar NOT NULL REFERENCES USERS(caseid),
+tripid uuid NOT NULL REFERENCES TRIPS(tripid),
+PRIMARY KEY (raterid, tripid));''')
         conn.commit()
     except:
         raise
