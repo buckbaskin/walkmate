@@ -1,6 +1,7 @@
 from webapp import server as router
 from webapp.wordid import integer_to_wordset, wordset_to_integer
 import webapp.database as database
+from datetime import datetime
 
 from flask import render_template, request, redirect, url_for
 
@@ -33,21 +34,24 @@ def profile_page(caseid):
 
 @router.route('/new_trip')
 def new_trip():
+    destinations = database.getAllDestinations(conn)
+    print(destinations)
     from_ = request.args.get('from_')
     to_ = request.args.get('to_')
-    at_ = request.args.get('trip-at')
+    ehour = request.args.get('ehour')
+    emin = request.args.get('emin')
     caseid = request.args.get('caseid')
-    if not (from_ and to_ and at_):
+    if not (from_ and to_ and emin and ehour and caseid):
         return render_template('new_trip.html',
                 title1='W', title2='Finalize Trip Details',
+                destinations=destinations,
                 trip=EXAMPLE_TRIP)
-
+    start_time = datetime.now().replace(hour = int(ehour)).replace(minute = int(emin))
     # make a new trip here
     # TODO Write in the new create trip here.
-    
+    db_uuid = database.createNewTrip(conn,caseid, from_,to_,start_time)
     # TODO Get the db_uuid for the new trip
-    db_uuid = 12345678910
-    nice_name = integer_to_wordset(int(db_uuid))
+    nice_name = db_uuid
     return redirect('/t/%s' % (nice_name,))
 
 
