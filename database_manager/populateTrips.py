@@ -43,7 +43,7 @@ def populateTrips(conn, cur):
 		raise e
 	query = 'INSERT INTO TRIPS(tripid,start_destination,end_destination,start_time,number_participants) VALUES (%s,%s,%s,%s,%s)'
 	tripid = uuid.uuid4().hex
-	start_time = datetime.datetime.utcnow()+ datetime.timedelta(days = 10)
+	start_time = datetime.datetime.utcnow()+ datetime.timedelta(hours = 10)
 	start_destination_name = ('Ugly Statue',)
 	end_destination_name = ('Glasier',)
 	number_participants = 2
@@ -80,7 +80,7 @@ def populateTrips(conn, cur):
 		raise e
 	query = 'INSERT INTO TRIPS(tripid,start_destination,end_destination,start_time,number_participants) VALUES (%s,%s,%s,%s,%s)'
 	tripid = uuid.uuid4().hex
-	start_time = datetime.datetime.utcnow()- datetime.timedelta(days = 10)
+	start_time = datetime.datetime.utcnow()- datetime.timedelta(hours = 10)
 	start_destination_name = ('Veale',)
 	end_destination_name = ('Village Starbucks',)
 	number_participants = 1
