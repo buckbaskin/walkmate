@@ -2,25 +2,57 @@
 {% block content %}
 
 <form class="" role="search" action="trip" method="get">
-  <label for="sel1">Select list:</label>
-  <select class="form-control" id="sel1">
-    
-    <option>1</option>
-    <option>2</option>
-    <option>3</option>
-    <option>4</option>
+  <label for="sel_from">From:</label>
+  <select class="form-control" name="from_" id="sel_from">
+    <option value="0">Select starting destination</option>
+    {% for destination in destinations %}
+    <option value="{{ destination[0] }}">{{ destination[1] }} ({{ destination[2] }})</option>
+    {% endfor %}
   </select>
-  <div class="input-group">
-    <span class="input-group-addon" id="basic-addon1">from</span>
-    <input type="text" id="trip-from" name="trip-from" value="{{from_}}" class="form-control" placeholder="Starting Location" aria-describedby="basic-addon1">
+  <label for="sel_to">To:</label>
+  <select class="form-control" name="to_" id="sel_to">
+  <option value="0">Select ending destination</option>
+    {% for destination in destinations %}
+    <option value="{{ destination[0] }}">{{ destination[1] }} ({{ destination[2] }})</option>
+    {% endfor %}
+  </select>
+  <label for="sel_etime">Earliest Time:</label>
+  <div class="container-fluid">
+    <div class="col-md-6">
+    <select class="form-control" name="ehour" id="sel_etime">
+        <option value="0">Hour</option>
+        {% for n in range(0, 23) %}
+        <option>{{ n }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-6">
+      <select class="form-control" name="emin" id="sel_etime2">
+      <option value="0">Min</option>
+        {% for n in range(0, 60, 15) %}
+        <option>{{ n }}</option>
+        {% endfor %}
+      </select>
+    </div>
   </div>
-  <div class="input-group">
-    <span class="input-group-addon" id="basic-addon2">to</span>
-    <input type="text" id="trip-to" name="trip-to" value="{{to_}}" class="form-control" placeholder="Ending Location" aria-describedby="basic-addon2">
-  </div>
-  <div class="input-group">
-    <span class="input-group-addon" id="basic-addon3">at</span>
-    <input type="text" id="trip-at" name="trip-at" value="{{at_}}" class="form-control" placeholder="12:15pm" aria-describedby="basic-addon3">
+  <label for="sel_ltime">Latest Time:</label>
+  <div class="container-fluid">
+    <div class="col-md-6">
+      <select class="form-control" name="lhour" id="sel_ltime">
+      <option value="0">Hour</option>
+        {% for n in range(0, 24) %}
+        <option>{{ n }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-6">
+      <select class="form-control" name="lmin" id="sel_ltime2">
+      <option value="0">Min</option>
+        {% for n in range(0, 60, 15) %}
+        <option>{{ n }}</option>
+        {% endfor %}
+      </select>
+    </div>
   </div>
   <div class="checkbox">
     <label><input type="checkbox" name="friends">Prefer Friends</label>
@@ -43,30 +75,30 @@
     <a href="/t/{{ trip[0] }}" class="list-group-item"> {{ trip }} </li>
       {% endfor %}
     </ul>
-  {% else %}
-  {% endif %}
-{% else %}
-  {% if trips %}
-  <h1>Trips</h1>
-  <div class="list-group">
-    {% for trip in trips %}
+    {% else %}
+    {% endif %}
+    {% else %}
+    {% if trips %}
+    <h1>Trips</h1>
+    <div class="list-group">
+      {% for trip in trips %}
       <a href="/t/{{ trip[0] }}" class="list-group-item">From: {{ trip[1] }} To: {{ trip[2] }} At: {{ trip[3] }}</a>
-    {% endfor %}
-  </div>
-  {% else %}
-  No Trips found.
-  {% endif %}
-{% endif %}
+      {% endfor %}
+    </div>
+    {% else %}
+    No Trips found.
+    {% endif %}
+    {% endif %}
 
-<h2>Not finding what you're looking for?</h2>
+    <h2>Not finding what you're looking for?</h2>
 
-<span>
-  <a href="/new_trip">
-    <button type="button" class="btn">Create New Trip</button>
-  </a>
-  <a href="/trip_more?trip-from={{ from_ }}&trip-to={{ to_ }}&trip-at={{ at }}">
-    <button type="button" class="btn">Load More Trips</button>
-  </a>
-</span>
+    <span>
+      <a href="/new_trip">
+        <button type="button" class="btn">Create New Trip</button>
+      </a>
+      <a href="/trip_more?trip-from={{ from_ }}&trip-to={{ to_ }}&trip-at={{ at }}">
+        <button type="button" class="btn">Load More Trips</button>
+      </a>
+    </span>
 
-{% endblock%}
+    {% endblock%}
