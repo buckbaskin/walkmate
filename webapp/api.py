@@ -45,7 +45,7 @@ def new_trip():
                 title1='W', title2='Finalize Trip Details',
                 destinations=destinations,
                 trip=EXAMPLE_TRIP)
-    start_time = datetime.now()
+    start_time = datetime.now().replace(hour = int(ehour)).replace(minute = int(emin))
     # make a new trip here
     # TODO Write in the new create trip here.
     db_uuid = database.createNewTrip(conn,caseid, from_,to_,start_time)
