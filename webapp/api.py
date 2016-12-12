@@ -38,15 +38,14 @@ def profile_page(caseid):
     # TODO make a query here to find a single user with the userid matching the shortuserid here
     # note: This shortuserid will be words that represent the id, so before the query, the id
     #       needs to be converted to an integer first.
-    first_name = 'Jane'
-    last_name = 'Doe'
-    description = 'I am a fan of Walkmate'
-    list_of_up_to_five_friends = [('other_user1',), ('other_user2',)]
+    user = database.getUser(conn, caseid)
+    first_name = user[2]
+    last_name = user[3]
+    trips = database.getUserTrips(conn, caseid)
     return render_template('profile.html',
                            title1='W', title2='%s %s' % (first_name, last_name,),
-                           logged_in=logged_in, username=shortuserid, user_id=user_id,
-                           first_name=first_name, last_name=last_name,
-                           description=description, friends=list_of_up_to_five_friends)
+                           username=caseid, trips=trips,
+                           first_name=first_name, last_name=last_name)
 
 @router.route('/new_trip')
 def new_trip():

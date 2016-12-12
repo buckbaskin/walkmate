@@ -15,3 +15,23 @@ def getAllTrips(conn, size):
         yield (tuple_[0], tuple_[1], tuple_[2], tuple_[3], tuple_[-1].hour, tuple_[-1].minute)
 
 # Git anchor
+
+def getUser(conn, caseid):
+    cur = conn.cursor()
+    cur.execute('''
+        SELECT *
+        FROM USERS
+        WHERE caseid = %s
+        ''', (caseid,))
+    return cur.fetchone()
+
+# Git anchor
+
+def getUserTrips(conn, caseid):
+    cur = conn.cursor()
+    cur.execute('''
+        SELECT T.*
+        FROM TRIPS as T, MEMBERS as M
+        WHERE M.tripid = T.tripid AND M.caseid = %s
+        ''', (caseid,))
+    return cur.fetchall()
