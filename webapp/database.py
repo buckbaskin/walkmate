@@ -51,6 +51,20 @@ def getAllTrips(conn, size):
 
 # Git anchor
 
+def getOneTrip(conn, tripid):
+    cur = conn.cursor()
+    cur.execute('''
+        SELECT T.tripid, D1.dname, D2.dname, T.start_time
+        FROM TRIPS as T, Destinations as D1, Destinations as D2
+        WHERE T.tripid = %s''', (tripid,))
+    tuple_ = cur.fetchone()
+    if tuple_ is None:
+        return []
+    print('trippy tuple: %s' % (tuple_,))
+    yield (tuple_[0], tuple_[1], tuple_[2], tuple_[3], tuple_[-1].hour, tuple_[-1].minute)
+
+# Git anchor
+
 def getUser(conn, caseid):
     cur = conn.cursor()
     cur.execute('''
@@ -70,3 +84,12 @@ def getUserTrips(conn, caseid):
         WHERE M.tripid = T.tripid AND M.caseid = %s
         ''', (caseid,))
     return cur.fetchall()
+
+# Git anchor
+
+def checkTripExists(conn, tripid):
+    cur = conn.cursor()
+    cur.execute('''SELECT * FROM TRIPS WHERE tripid = %s''',
+        (long_id,))
+    trip_exists = len(cur.fetchmany(1)) > 0
+    return trip_exists

@@ -82,45 +82,20 @@ def loadMoreTrips():
         at_ = ''
     prefer_friends = request.args.get('friends')
     
-    try:
-        cur = conn.cursor()
-
-        if not from_ == '':
-            # TODO Get trips that match the from/to/at request
-            pass
-        else:
-            # TODO Get all trips (this might be good here, but not sorted by nearest in time for example)
-            cur.execute("""SELECT * FROM trips""")
-
-        trips = cur.fetchmany(10)
-    except:
-        trips = []
-        print('Database requests failed.')
-    
-    if from_ == '' or to_ == '' or at_ == '':
-        message = 'Can you provide more information?'
-        trips = []
-    else:
-        message = ''
+    trips = database.getAllTrips(conn, 10)
     
     return render_template('find_trip.html', 
         title1='W', title2='Find More Trips',
-        from_=from_, to_=to_, at_=at_, message=message, 
-        friend_trips=[], trips=trips)
+        from_=from_, to_=to_, at_=at_,
+        trips=trips)
 
 @router.route('/t/<shorttripid>/join', methods=['POST'])
 def joinTripPage(shorttripid):
     # TODO implement joining a trip
     # TODO GET trip to check if it exists
     # TODO Write user to trip
-    long_id = wordset_to_integer(shorttripid)
-    try:
-        cur = conn.cursor()
-        cur.execute('''SELECT * FROM trips WHERE id = %s OR short_id = %s''',
-            (long_id, shorttripid,))
-        trip_exists = len(cur.fetchmany(1)) > 0
-    except:
-        trip_exists = False
+    long_id = shorttripid
+    trip_exists = database.checkTripExists(shorttripid)
     if not trip_exists:
         return redirect('/trip')
 
@@ -138,25 +113,11 @@ def tripDetailPage(shorttripid):
     # TODO add a join trip button with a case id field
     long_id = shorttripid
 
-    try:
-        cur = conn.cursor()
+    trip = list(database.getOneTrip(conn, shorttripid))
 
-        # TODO fix this. Get trips that match the trip id, and take the first one
-        cur.execute('''SELECT * FROM TRIPS WHERE tripid = %s''',
-            (long_id,))
-
-        trip = cur.fetchmany(1)
-    except:
-        trip = []
-
-    # TODO remove these: They are special cases for helping with creating templates
     if len(trip) <= 0:
         print('I have reached a special case')
-        if shorttripid == 'Tahitians.deities.Aachen':
-            return render_template('trip_detail_active.html',
-                title1='W', title2='Trip Details',
-                trip=EXAMPLE_TRIP2)
-        elif shorttripid == 'soon_trip':
+        if shorttripid == 'soon_trip':
             return render_template('trip_detail_soon.html',
                 title1='W', title2='Trip Details',
                 trip=EXAMPLE_TRIP, user_list=[('Jane', 'jan2',), ('John', 'joh3',)])
@@ -172,5 +133,5 @@ def tripDetailPage(shorttripid):
         print('shorttripid = %s' % (shorttripid,))
         return redirect('/trip')
     else:
-        # TODO use this render template
+        # TODO check time and use a different template
         return render_template('trip_detail_active.html', trip=trip)
