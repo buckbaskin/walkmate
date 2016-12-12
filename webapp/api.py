@@ -142,4 +142,10 @@ def tripDetailPage(shorttripid):
         user_list = database.getUserByTrip(conn, shorttripid)
         # TODO check time and use a different template
         print('trip tuple: %s' % (trips,))
-        return render_template('trip_detail_active.html', trip=trips[0], user_list=user_list)
+        trip = trips[0]
+        if (datetime.now() - trip[3]).total_seconds() < 0:
+            return render_template('trip_detail_soon.html', trip=trip, user_list=user_list)
+        elif (datetime.now() - trip[3]).total_seconds() < 60 * 60:
+            return render_template('trip_detail_active.html', trip=trip, user_list=user_list)
+        else:
+            return render_template('trip_detail_done.html', trip=trip, user_list=user_list)
