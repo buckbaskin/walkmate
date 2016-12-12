@@ -32,9 +32,10 @@ def profile_page(caseid):
 
 @router.route('/new_trip')
 def new_trip():
-    from_ = request.args.get('trip-from')
-    to_ = request.args.get('trip-to')
+    from_ = request.args.get('from_')
+    to_ = request.args.get('to_')
     at_ = request.args.get('trip-at')
+    caseid = request.args.get('caseid')
     if not (from_ and to_ and at_):
         return render_template('new_trip.html',
                 title1='W', title2='Finalize Trip Details',

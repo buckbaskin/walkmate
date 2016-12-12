@@ -10,7 +10,7 @@ except:
     print('Database Connection Failed')
     raise
 
-def createNewTrip(uuuid,start_destination,end_destination,start_time):
+def createNewTrip(con, cur, caseid,start_destination,end_destination,start_time):
     tripid = uuid.uuid4().hex
     errorflag = False
     try:
@@ -33,8 +33,9 @@ def createNewTrip(uuuid,start_destination,end_destination,start_time):
             errorflag = True
             raise
     try:
-        query2 = "INSERT INTO ONTRIP (tripid, uuuid)"
-        data2 = (tripid, uuid)
+        query2 = "INSERT INTO MEMBERS (tripid, caseid)"
+        data2 = (tripid, caseid)
+        cur.execute(query2,data2)
     except:    
         print('Database insertion error, most likely not uuid collision')
         errorflag = True
@@ -42,4 +43,5 @@ def createNewTrip(uuuid,start_destination,end_destination,start_time):
     if not errorflag:
         conn.commit()
         cur.close()
+    return tripid
     
