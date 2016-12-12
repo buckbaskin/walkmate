@@ -1,5 +1,6 @@
 from webapp import server as router
 from webapp.wordid import integer_to_wordset, wordset_to_integer
+# from webapp.database import joinTrip
 
 from flask import render_template, request, redirect, url_for
 
@@ -18,7 +19,7 @@ EXAMPLE_TRIP = ('special_trip_id', 'Leutner', 'Fribley', '3:00PM', 'specialuseri
 def index():
     return render_template('index.html')
 
-@router.route('/login')
+# @router.route('/login')
 def login():
     email = request.args.get('email')
     password = request.args.get('password')
@@ -32,18 +33,11 @@ def login():
         # do some login stuff
         return redirect('/trip')
 
-@router.route('/u/<shortuserid>/edit')
-def edit_profile_page(shortuserid):
-    # TODO implement profile editing
-    return redirect('/u/%s' % (shortuserid,))
-
-@router.route('/u/<shortuserid>')
-def profile_page(shortuserid):
-    user_id = wordset_to_integer(shortuserid)
-    if shortuserid == 'logged.out':
-        logged_in=False
-    else:
-        logged_in = True
+@router.route('/u/<caseid>')
+def profile_page(caseid):
+    # TODO make a query here to find a single user with the userid matching the shortuserid here
+    # note: This shortuserid will be words that represent the id, so before the query, the id
+    #       needs to be converted to an integer first.
     first_name = 'Jane'
     last_name = 'Doe'
     description = 'I am a fan of Walkmate'
@@ -65,6 +59,9 @@ def new_trip():
                 trip=EXAMPLE_TRIP)
 
     # make a new trip here
+    # TODO Write in the new create trip here.
+    
+    # TODO Get the db_uuid for the new trip
     db_uuid = 12345678910
     nice_name = integer_to_wordset(int(db_uuid))
     return redirect('/t/%s' % (nice_name,))
@@ -84,24 +81,31 @@ def tripfinder():
     try:
         cur = conn.cursor()
 
-        cur.execute("""SELECT * FROM trips""")
+        if not from_ == '':
+            # TODO Get trips that match the from/to/at request
+            pass
+        else:
+            # TODO Get all trips (this might be good here, but not sorted by nearest in time for example)
+            cur.execute("""SELECT * FROM trips""")
 
         trips = cur.fetchmany(3)
     except:
         trips = []
         print('Database requests failed.')
     
-    if not from_ == '' and not to_ == '' and not at_ == '':
-        message = 'The database results go here. We probably want to template a list.'
-    else:
+    if from_ == '' or to_ == '' or at_ == '':
         message = 'Can you provide more information?'
         trips = []
+    else:
+        message = ''
 
-    if trips == []:
-        trips = [EXAMPLE_TRIP]
-    
+    # TODO make this a SQL query
+    destinations = [(1, 'Fribley', 'South Side'), (2, 'Leutner', 'North Side')]
+    print(destinations)
+
     return render_template('find_trip.html',
         title1='W', title2='Find a Trip',
+        destinations=destinations,
         from_=from_, to_=to_, at_=at_, message=message, 
         friend_trips=[], trips=trips)
 
@@ -119,49 +123,63 @@ def loadMoreTrips():
     try:
         cur = conn.cursor()
 
-        cur.execute("""SELECT * FROM trips""")
+        if not from_ == '':
+            # TODO Get trips that match the from/to/at request
+            pass
+        else:
+            # TODO Get all trips (this might be good here, but not sorted by nearest in time for example)
+            cur.execute("""SELECT * FROM trips""")
 
         trips = cur.fetchmany(10)
     except:
         trips = []
-        print('Database requets failed.')
+        print('Database requests failed.')
     
-    if not from_ == '' and not to_ == '' and not at_ == '':
-        message = 'The database results go here. We probably want to template a list.'
-    else:
+    if from_ == '' or to_ == '' or at_ == '':
         message = 'Can you provide more information?'
         trips = []
-
-    if trips == []:
-        trips = [EXAMPLE_TRIP]
+    else:
+        message = ''
     
     return render_template('find_trip.html', 
         title1='W', title2='Find More Trips',
         from_=from_, to_=to_, at_=at_, message=message, 
         friend_trips=[], trips=trips)
 
-def expandIdentifier(shortIdentifier):
-    # TODO maybe implement this
-    # Maybe just make a short id for everything when it is inserted into db
-    return shortIdentifier
-
-def compressIdentifier(longIdentifier):
-    # TODO maybe implement this
-    # Maybe just make a short id for everything when it is inserted into db
-    return longIdentifier
-
-@router.route('/t/<shorttripid>/join', methods=['GET'])
+@router.route('/t/<shorttripid>/join', methods=['POST'])
 def joinTripPage(shorttripid):
     # TODO implement joining a trip
+    # TODO GET trip to check if it exists
+    # TODO Write user to trip
+    long_id = wordset_to_integer(shorttripid)
+    try:
+        cur = conn.cursor()
+        cur.execute('''SELECT * FROM trips WHERE id = %s OR short_id = %s''',
+            (long_id, shorttripid,))
+        trip_exists = len(cur.fetchmany(1)) > 0
+    except:
+        trip_exists = False
+    if not trip_exists:
+        return redirect('/trip')
+
+    caseid = request.args.get('caseid')
+    if caseid is not None:
+        # TODO add it to the trip
+        pass
+
     return redirect('/t/%s' % (shorttripid,))
+
+
 
 @router.route('/t/<shorttripid>', methods=['GET'])
 def tripDetailPage(shorttripid):
+    # TODO add a join trip button with a case id field
     long_id = wordset_to_integer(shorttripid)
 
     try:
         cur = conn.cursor()
 
+        # TODO fix this. Get trips that match the trip id, and take the first one
         cur.execute('''SELECT * FROM trips WHERE id = %s OR short_id = %s''',
             (long_id, shorttripid,))
 
@@ -169,24 +187,28 @@ def tripDetailPage(shorttripid):
     except:
         trip = []
 
+    # TODO remove these: They are special cases for helping with creating templates
     if len(trip) <= 0:
+        print('I have reached a special case')
         if shorttripid == 'Tahitians.deities.Aachen':
             return render_template('trip_detail_active.html',
                 title1='W', title2='Trip Details',
                 trip=EXAMPLE_TRIP2)
-        if shorttripid == 'soon_trip':
+        elif shorttripid == 'soon_trip':
             return render_template('trip_detail_soon.html',
                 title1='W', title2='Trip Details',
-                trip=EXAMPLE_TRIP)
-        if shorttripid == 'done_trip':
+                trip=EXAMPLE_TRIP, user_list=[('Jane', 'jan2',), ('John', 'joh3',)])
+        elif shorttripid == 'done_trip':
             return render_template('trip_detail_done.html',
                 title1='W', title2='Trip Details',
-                trip=EXAMPLE_TRIP)
-        if shorttripid == 'special_trip_id':
+                trip=EXAMPLE_TRIP, user_list=[('Jane', 'jan2',), ('John', 'joh3',)])
+        elif shorttripid == 'active_trip':
             return render_template('trip_detail_active.html',
                 title1='W', title2='Trip Details',
-                trip=EXAMPLE_TRIP)
+                trip=EXAMPLE_TRIP, user_list=[('Jane', 'jan2',), ('John', 'joh3',)])
         # no result
+        print('shorttripid = %s' % (shorttripid,))
         return redirect('/trip')
     else:
+        # TODO use this render template
         return render_template('trip_detail_active.html', trip=trip)

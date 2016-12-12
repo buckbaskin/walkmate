@@ -4,7 +4,7 @@ words_backward = {} # word to number
 import math
 
 
-with open('/home/buck/Github/walkmate/webapp/wordid/words.txt', 'r') as words_file:
+with open('webapp/wordid/words.txt', 'r') as words_file:
     for index, word in enumerate(words_file):
         if word.strip() == '':
             pass

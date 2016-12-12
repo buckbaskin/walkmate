@@ -11,7 +11,7 @@ except:
     raise
 
 def createNewTrip(uuuid,start_destination,end_destination,start_time):
-    tripid = uuid.uuid.uuid4().hex
+    tripid = uuid.uuid4().hex
     errorflag = False
     try:
         query1 = "INSERT INTO TRIPS (tripid, start_destination, end_destination, start_time, number_partipants)"
@@ -40,6 +40,6 @@ def createNewTrip(uuuid,start_destination,end_destination,start_time):
         errorflag = True
         raise
     if not errorflag:
-        cur.commit()
+        conn.commit()
         cur.close()
     
