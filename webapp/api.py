@@ -99,8 +99,7 @@ def tripfinder():
     else:
         message = ''
 
-    # TODO make this a SQL query
-    destinations = [(1, 'Fribley', 'South Side'), (2, 'Leutner', 'North Side')]
+    destinations = database.getAllDestinations(conn, cur)
     print(destinations)
 
     return render_template('find_trip.html',
