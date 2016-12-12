@@ -10,13 +10,13 @@ def populateDestinations(conn, cur):
     query = 'INSERT INTO DESTINATIONS (did,dname,area_of_campus) VALUES (%s, %s, %s)'
     for dname in destinations:
         try:
-            did = uuid.uuid4()
+            did = uuid.uuid4().hex
             data = (did,dname,area_of_campus)
             cur.execute(query,data)
         except psycopg2.Error as e:
             if e.pgcode == '23505':
                 try:
-                    did = uuid.uuid4()
+                    did = uuid.uuid4().hex
                     data = (did,dname,area_of_campus)
                     cur.execute(query,data)
                 except:
@@ -30,13 +30,13 @@ def populateDestinations(conn, cur):
     destinations.append('Parking Lot')
     for dname in destinations:
         try:
-            did = uuid.uuid4()
+            did = uuid.uuid4().hex
             data = (did,dname,area_of_campus)
             cur.execute(query,data)
         except psycopg2.Error as e:
             if e.pgcode == '23505':
                 try:
-                    did = uuid.uuid4()
+                    did = uuid.uuid4().hex
                     data = (did,dname,area_of_campus)
                     cur.execute(query,data)
                 except:
@@ -50,13 +50,13 @@ def populateDestinations(conn, cur):
     destinations.append('Parking Lot')
     for dname in destinations:
         try:
-            did = uuid.uuid4()
+            did = uuid.uuid4().hex
             data = (did,dname,area_of_campus)
             cur.execute(query,data)
         except psycopg2.Error as e:
             if e.pgcode == '23505':
                 try:
-                    did = uuid.uuid4()
+                    did = uuid.uuid4().hex
                     data = (did,dname,area_of_campus)
                     cur.execute(query,data)
                 except:
@@ -71,13 +71,13 @@ def populateDestinations(conn, cur):
     destinations.append('Nord')
     for dname in destinations:
         try:
-            did = uuid.uuid4()
+            did = uuid.uuid4().hex
             data = (did,dname,area_of_campus)
             cur.execute(query,data)
         except psycopg2.Error as e:
             if e.pgcode == '23505':
                 try:
-                    did = uuid.uuid4()
+                    did = uuid.uuid4().hex
                     data = (did,dname,area_of_campus)
                     cur.execute(query,data)
                 except:

@@ -4,7 +4,7 @@ def createAll(conn, cur):
         cur.execute('''
 CREATE TABLE USERS
 (caseid varchar NOT NULL PRIMARY KEY,
-hashed_raiseword varchar NOT NULL,
+hashed_password varchar NOT NULL,
 first_name varchar NOT NULL,
 last_name varchar NOT NULL,
 date_joined timestamp NOT NULL);''')
@@ -13,7 +13,7 @@ date_joined timestamp NOT NULL);''')
     try:
         cur.execute('''
 CREATE TABLE DESTINATIONS
-(did uuid NOT NULL PRIMARY KEY,
+(did char(32) NOT NULL PRIMARY KEY,
 dname varchar NOT NULL,
 area_of_campus varchar);''')
         conn.commit()
@@ -41,9 +41,9 @@ PRIMARY KEY(userid1, userid2));''')
     try:
         cur.execute('''
 CREATE TABLE TRIPS
-(tripid uuid NOT NULL PRIMARY KEY,
-start_destination uuid NOT NULL REFERENCES DESTINATIONS(did),
-end_destination uuid NOT NULL REFERENCES DESTINATIONS(did),
+(tripid char(32) NOT NULL PRIMARY KEY,
+start_destination char(32) NOT NULL REFERENCES DESTINATIONS(did),
+end_destination char(32) NOT NULL REFERENCES DESTINATIONS(did),
 start_time timestamp NOT NULL,
 number_participants integer NOT NULL);''')
         conn.commit()
@@ -52,9 +52,9 @@ number_participants integer NOT NULL);''')
     try:
         cur.execute('''
 CREATE TABLE MEMBERS
-(tripid uuid NOT NULL REFERENCES TRIPS(tripid),
-uuuid varchar NOT NULL REFERENCES USERS(caseid),
-PRIMARY KEY(tripid, uuuid));''')
+(tripid char(32) NOT NULL REFERENCES TRIPS(tripid),
+caseid varchar NOT NULL REFERENCES USERS(caseid),
+PRIMARY KEY(tripid, caseid));''')
         conn.commit()
     except:
         raise
@@ -73,7 +73,7 @@ PRIMARY KEY (raterid, rateeid));''')
         cur.execute('''
 CREATE TABLE TRIPRATINGS
 (raterid varchar NOT NULL REFERENCES USERS(caseid),
-tripid uuid NOT NULL REFERENCES TRIPS(tripid),
+tripid char(32) NOT NULL REFERENCES TRIPS(tripid),
 PRIMARY KEY (raterid, tripid));''')
         conn.commit()
     except:
