@@ -19,25 +19,8 @@ EXAMPLE_TRIP = ('special_trip_id', 'Leutner', 'Fribley', '3:00PM', 'specialuseri
 def index():
     return render_template('index.html')
 
-# @router.route('/login')
-def login():
-    email = request.args.get('email')
-    password = request.args.get('password')
-    if not (email and password):
-        if not email:
-            email = ''
-        return render_template('login.html',
-                               title1='W', title2='Login',
-                               email=email)
-    else:
-        # do some login stuff
-        return redirect('/trip')
-
 @router.route('/u/<caseid>')
 def profile_page(caseid):
-    # TODO make a query here to find a single user with the userid matching the shortuserid here
-    # note: This shortuserid will be words that represent the id, so before the query, the id
-    #       needs to be converted to an integer first.
     user = database.getUser(conn, caseid)
     first_name = user[2]
     last_name = user[3]
