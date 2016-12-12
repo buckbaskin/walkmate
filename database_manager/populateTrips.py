@@ -1,9 +1,9 @@
 import psycopg2
 import datetime
 import uuid
-def populateTrips(cur):
+def populateTrips(conn, cur):
 	query = 'INSERT INTO TRIPS(tripid,start_destination,end_destination,start_time,number_participants) VALUES (%s,%s,%s,%s,%s)'
-	tripid = uuid.uuid.uuid4()
+	tripid = uuid.uuid4()
 	start_time = datetime.datetime.utcnow()
 	start_destination_name = 'Fribley'
 	end_destination_name = "Nord"
@@ -22,8 +22,8 @@ def populateTrips(cur):
 	try:
 		cur.execute(query,data)
 	except psycopg2.Error as e:
-		if e.pgcode = '23505':
-			tripid = uuid.uuid.uuid4()
+		if e.pgcode == '23505':
+			tripid = uuid.uuid4()
 			data = (tripid,start_destination,end_destination,start_time,number_participants)
 			try:
 				cur.execute(query,data)
@@ -42,7 +42,7 @@ def populateTrips(cur):
 	except Exception as e:
 		raise e
 	query = 'INSERT INTO TRIPS(tripid,start_destination,end_destination,start_time,number_participants) VALUES (%s,%s,%s,%s,%s)'
-	tripid = uuid.uuid.uuid4()
+	tripid = uuid.uuid4()
 	start_time = datetime.datetime.utcnow()+ datetime.timedelta(days = 10)
 	start_destination_name = 'Ugly Statue'
 	end_destination_name = "Glasier"
@@ -61,8 +61,8 @@ def populateTrips(cur):
 	try:
 		cur.execute(query,data)
 	except psycopg2.Error as e:
-		if e.pgcode = '23505':
-			tripid = uuid.uuid.uuid4()
+		if e.pgcode == '23505':
+			tripid = uuid.uuid4()
 			data = (tripid,start_destination,end_destination,start_time,number_participants)
 			try:
 				cur.execute(query,data)
@@ -79,7 +79,7 @@ def populateTrips(cur):
 	except Exception as e:
 		raise e
 	query = 'INSERT INTO TRIPS(tripid,start_destination,end_destination,start_time,number_participants) VALUES (%s,%s,%s,%s,%s)'
-	tripid = uuid.uuid.uuid4()
+	tripid = uuid.uuid4()
 	start_time = datetime.datetime.utcnow()- datetime.timedelta(days = 10)
 	start_destination_name = 'Veale'
 	end_destination_name = "Village Starbucks"
@@ -98,8 +98,8 @@ def populateTrips(cur):
 	try:
 		cur.execute(query,data)
 	except psycopg2.Error as e:
-		if e.pgcode = '23505':
-			tripid = uuid.uuid.uuid4()
+		if e.pgcode == '23505':
+			tripid = uuid.uuid4()
 			data = (tripid,start_destination,end_destination,start_time,number_participants)
 			try:
 				cur.execute(query,data)
@@ -113,5 +113,5 @@ def populateTrips(cur):
 		cur.execute(member_query,member_data)
 		member_data = (tripid,'jns83')
 		cur.execute(member_query,member_data)
-	except Exception as e
+	except Exception as e:
 		raise e
