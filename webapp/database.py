@@ -61,7 +61,10 @@ def getOneTrip(conn, tripid):
     if tuple_ is None:
         return []
     print('trippy tuple: %s' % (tuple_,))
-    yield (tuple_[0], tuple_[1], tuple_[2], tuple_[3], tuple_[-1].hour, tuple_[-1].minute)
+
+    num_participants = 0
+
+    yield (tuple_[0], tuple_[1], tuple_[2], tuple_[3], num_participants, tuple_[3].hour, tuple_[3].minute)
 
 # Git anchor
 
@@ -90,6 +93,13 @@ def getUserTrips(conn, caseid):
 def checkTripExists(conn, tripid):
     cur = conn.cursor()
     cur.execute('''SELECT * FROM TRIPS WHERE tripid = %s''',
-        (long_id,))
+        (tripid,))
     trip_exists = len(cur.fetchmany(1)) > 0
     return trip_exists
+
+# Git anchor
+
+def addToTrip(conn, tripid, caseid):
+    cur = conn.cursor()
+    #  TODO ... implement
+    return True

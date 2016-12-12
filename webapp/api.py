@@ -95,14 +95,13 @@ def joinTripPage(shorttripid):
     # TODO GET trip to check if it exists
     # TODO Write user to trip
     long_id = shorttripid
-    trip_exists = database.checkTripExists(shorttripid)
+    trip_exists = database.checkTripExists(conn, shorttripid)
     if not trip_exists:
         return redirect('/trip')
 
     caseid = request.args.get('caseid')
     if caseid is not None:
-        # TODO add it to the trip
-        pass
+        database.addToTrip(conn, tripid, caseid)
 
     return redirect('/t/%s' % (shorttripid,))
 
@@ -113,9 +112,9 @@ def tripDetailPage(shorttripid):
     # TODO add a join trip button with a case id field
     long_id = shorttripid
 
-    trip = list(database.getOneTrip(conn, shorttripid))
+    trips = list(database.getOneTrip(conn, shorttripid))
 
-    if len(trip) <= 0:
+    if len(trips) <= 0:
         print('I have reached a special case')
         if shorttripid == 'soon_trip':
             return render_template('trip_detail_soon.html',
@@ -133,5 +132,8 @@ def tripDetailPage(shorttripid):
         print('shorttripid = %s' % (shorttripid,))
         return redirect('/trip')
     else:
+        # TODO get list of users for the trip
+        user_list = [('Jane', 'jan2')]
         # TODO check time and use a different template
-        return render_template('trip_detail_active.html', trip=trip)
+        print('trip tuple: %s' % (trips,))
+        return render_template('trip_detail_active.html', trip=trips[0], user_list=user_list)
