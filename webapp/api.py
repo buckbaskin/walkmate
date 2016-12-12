@@ -57,23 +57,32 @@ def new_trip():
 
 @router.route('/trip', methods=['GET'])
 def tripfinder():
-    from_ = request.args.get('trip-from')
-    to_ = request.args.get('trip-to')
-    at_ = request.args.get('trip-at')
-    if from_ is None or to_ is None or at_ is None:
+    from_ = request.args.get('from_')
+    to_ = request.args.get('to_')
+    ehour = request.args.get('ehour')
+    emin = request.args.get('emin')
+    lhour = request.args.get('lhour')
+    lmin = request.args.get('lmin')
+    if from_ is None or to_ is None or ehour is None or emin is None or lhour is None or lmin is None:
         from_ = ''
         to_ = ''
-        at_ = ''
-    prefer_friends = request.args.get('friends')
-    
-    trips = database.getAllTrips(conn, 3)
+        emin = ''
+        ehour = ''
+        lmin = ''
+        lhour = ''
+        trips = database.getAllTrips(conn, 3)
+    else:
+        start_time = datetime.now().replace(hour = int(ehour)).replace(minute = int(emin))
+        end_time = datetime.now().replace(hour = int(lhour)).replace(minute = int(lmin))
+        prefer_friends = bool(request.args.get('friends'))
+        trips = database.getSpecificTrips(conn, 3,from_,to_,start_time,end_time)
     destinations = database.getAllDestinations(conn)
     print(destinations)
 
     return render_template('find_trip.html',
         title1='W', title2='Find a Trip',
         destinations=destinations,
-        from_=from_, to_=to_, at_=at_,
+        from_=from_, to_=to_, ehour = ehour, emin = emin, lmin = lmin, lhour= lhour,
         friend_trips=[], trips=trips)
 
 @router.route('/trip_more', methods=['GET'])
