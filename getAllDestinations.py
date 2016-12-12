@@ -7,6 +7,6 @@ try:
 except:
     print('Database Connection Failed')
     raise
-def getALLDestinations():
+def getALLDestinations(conn, cur):
     cur.execute('SELECT * FROM DESTINATIONS')
     return cur.fetchAll()
