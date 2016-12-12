@@ -21,12 +21,14 @@ def populateTrips(conn, cur):
 	data = (tripid,start_destination,end_destination,start_time,number_participants)
 	try:
 		cur.execute(query,data)
+		conn.commit()
 	except psycopg2.Error as e:
 		if e.pgcode == '23505':
 			tripid = uuid.uuid4().hex
 			data = (tripid,start_destination,end_destination,start_time,number_participants)
 			try:
 				cur.execute(query,data)
+				conn.commit()
 			except psycopg2.Error as e:
 				raise e
 		else:
@@ -35,10 +37,13 @@ def populateTrips(conn, cur):
 	try:
 		member_data = (tripid,'wcb38')
 		cur.execute(member_query,member_data)
+		conn.commit()
 		member_data = (tripid,'pjt37')
 		cur.execute(member_query,member_data)
+		conn.commit()
 		member_data = (tripid,'raw141')
 		cur.execute(member_query,member_data)
+		conn.commit()
 	except Exception as e:
 		raise e
 	query = 'INSERT INTO TRIPS(tripid,start_destination,end_destination,start_time,number_participants) VALUES (%s,%s,%s,%s,%s)'
@@ -60,12 +65,14 @@ def populateTrips(conn, cur):
 	data = (tripid,start_destination,end_destination,start_time,number_participants)
 	try:
 		cur.execute(query,data)
+		conn.commit()
 	except psycopg2.Error as e:
 		if e.pgcode == '23505':
 			tripid = uuid.uuid4().hex
 			data = (tripid,start_destination,end_destination,start_time,number_participants)
 			try:
 				cur.execute(query,data)
+				conn.commit()
 			except psycopg2.Error as e:
 				raise e
 		else:
@@ -74,8 +81,10 @@ def populateTrips(conn, cur):
 	try:
 		member_data = (tripid,'peb30')
 		cur.execute(member_query,member_data)
+		conn.commit()
 		member_data = (tripid,'prn15')
 		cur.execute(member_query,member_data)
+		conn.commit()
 	except Exception as e:
 		raise e
 	query = 'INSERT INTO TRIPS(tripid,start_destination,end_destination,start_time,number_participants) VALUES (%s,%s,%s,%s,%s)'
@@ -97,12 +106,14 @@ def populateTrips(conn, cur):
 	data = (tripid,start_destination,end_destination,start_time,number_participants)
 	try:
 		cur.execute(query,data)
+		conn.commit()
 	except psycopg2.Error as e:
 		if e.pgcode == '23505':
 			tripid = uuid.uuid4().hex
 			data = (tripid,start_destination,end_destination,start_time,number_participants)
 			try:
 				cur.execute(query,data)
+				conn.commit()
 			except psycopg2.Error as e:
 				raise e
 		else:
@@ -111,7 +122,9 @@ def populateTrips(conn, cur):
 	try:
 		member_data = (tripid,'raw141')
 		cur.execute(member_query,member_data)
+		conn.commit()
 		member_data = (tripid,'jns83')
 		cur.execute(member_query,member_data)
+		conn.commit()
 	except Exception as e:
 		raise e
