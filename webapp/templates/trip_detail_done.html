@@ -7,6 +7,9 @@ The current status of your trip is:
 Done
 </p>
 
-<button type="button" class="btn">+1</button>
+<form class="" role="search" action="/t/{{ tripid }}/like" method="get">
+<input type="text" id="caseid" name="caseid" value="{{caseid}}" class="form-control" placeholder="abc123" aria-describedby="basic-addon4">
+<input type="submit" class="btn btn-default" value="+1">
+</form>
 
 {% endblock%}
