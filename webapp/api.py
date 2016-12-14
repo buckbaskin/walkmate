@@ -23,14 +23,32 @@ def index():
 @router.route('/u/<caseid>')
 def profile_page(caseid):
     user = database.getUser(conn, caseid)
+    if user is None:
+        return redirect(url_for('index'))
     first_name = user[2]
     last_name = user[3]
     trips = database.getUserTrips(conn, caseid)
-    print('trips'+str(trips ))
+    # print('trips'+str(trips ))
+    friend_list = database.listFriends(conn, caseid)
+    print('Friend list: %s' % (friend_list,))
     return render_template('profile.html',
                            title1='W', title2='%s %s' % (first_name, last_name,),
                            username=caseid, trips=trips,
-                           first_name=first_name, last_name=last_name)
+                           first_name=first_name, last_name=last_name, 
+                           friend_list=friend_list)
+
+@router.route('/u/<caseid>/friend')
+def friend_user(caseid):
+    requesting_user = request.args.get('user')
+    print('%s sent a friend request to %s' % (requesting_user, caseid,))
+    database.makeFriends(conn, requesting_user, caseid)
+    return redirect('/u/%s' % (caseid,))
+
+@router.route('/u/<caseid>/block')
+def block_user(caseid):
+    requesting_user = request.args.get('user')
+    database.block_user(conn, requesting_user, caseid)
+    return redirect('/u/%s' % (caseid,))
 
 @router.route('/new_trip')
 def new_trip():
