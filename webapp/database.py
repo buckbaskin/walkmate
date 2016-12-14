@@ -1,5 +1,6 @@
 import uuid
 import psycopg2
+import datetime
 
 def commit_me(func):
     def replacement(conn, *args, **kwargs):
@@ -249,6 +250,51 @@ def countLikes(conn, caseid):
     else:
         return result[0]
 
-def rateTrip(conn, tripid):
-    # TODO(buckbaskin)
+def rateTrip(conn, tripid,caseid):
+    cur = conn.cursor()
+    try:
+        cur.execute('INSERT INTO TRIPRATINGS(tripid,caseid) VALUES (%s, %s)',(tripid,caseid,))
+    except psycopg2.IntegrityError as e:
+        pass
+    tripMembers = getTripMembers(conn,tripid)
+    for tuple_ in tripMemebers:
+        rateUsers(conn,caseid,tuple_[0])
     return True
+def rateUsers(conn,userid1,userid2):
+    cur.execute(
+        '''
+        SELECT *
+        FROM USERRATINGS AS U
+        WHERE U.raterid = %s AND U.rateeid = %s''',(userid1,userid2,))
+    result = cur.fetchone()
+    if result is None:
+        cur.execute('INSERT INTO USERRATINGS(raterid,rateeid,rating) VALUES (%s, %s)',(userid1,userid2,1,))
+        conn.commit()
+    else:
+        cur.execute('UPDATE USERRATINGS AS U SET rating = rating +1 WHERE U.raterid = %s AND U.rateeid = %s', (userid1,userid2,))
+        conn.commit()
+
+def verifyCaseid(conn,caseid):
+    cur = conn.cursor()
+    cur.execute(
+        '''
+        SELECT *
+        FROM USERS as U
+        WHERE U.caseid = %s
+        ''',(caseid,))
+    userexists = cur.fetchone()
+    if userexists is not None:
+        return True
+    else:
+        return False
+
+def addUser(caseid,hashed_password,first_name,last_name):
+    query = 'INSERT INTO USERS (caseid, hashed_password, first_name, last_name, date_joined) VALUES (%s, %s, %s, %s, %s)'
+    date_joined = datetime.datetime.utcnow()
+    data = (caseid, hashed_password, first_name, last_name, date_joined)
+    try:
+        cur.execute(query,data)
+        conn.commit()
+        return True
+    except psycopg2.IntegrityError as e:
+        return False
