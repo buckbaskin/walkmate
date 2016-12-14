@@ -7,11 +7,14 @@ from flask import render_template, request, redirect, url_for
 
 import psycopg2
 
+
 try:
     conn = psycopg2.connect(dbname='postgres', user='postgres',
         password='economicalchinchillacorndog', host='localhost')
 except:
     print('No Database.')
+    import sys
+    sys.exit(1)
 
 EXAMPLE_TRIP2 = ('Tahitians.deities.Aachen', 'Fribley', 'Leutner', '12:15PM', 'specialuserid',)
 EXAMPLE_TRIP = ('special_trip_id', 'Leutner', 'Fribley', '3:00PM', 'specialuserid',)
