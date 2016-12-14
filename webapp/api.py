@@ -47,7 +47,7 @@ def friend_user(caseid):
 @router.route('/u/<caseid>/block')
 def block_user(caseid):
     requesting_user = request.args.get('user')
-    database.block_user(conn, requesting_user, caseid)
+    database.blockUser(conn, requesting_user, caseid)
     return redirect('/u/%s' % (caseid,))
 
 @router.route('/new_trip')
@@ -137,8 +137,6 @@ def joinTripPage(shorttripid):
         database.addToTrip(conn, tripid, caseid)
 
     return redirect('/t/%s' % (shorttripid,))
-
-
 
 @router.route('/t/<shorttripid>', methods=['GET'])
 def tripDetailPage(shorttripid):

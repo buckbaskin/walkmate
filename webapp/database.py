@@ -117,7 +117,7 @@ def checkTripExists(conn, tripid):
 @commit_me
 def addToTrip(conn, tripid, caseid):
     cur = conn.cursor()
-    cur.execute('''INSERT INTO MEMBERS(tripid, caseid) VALUES(tripid, caseid))''')
+    cur.execute('''INSERT INTO MEMBERS(tripid, caseid) VALUES(%s, %s)''', (tripid, caseid,))
     return True
 
 # Git anchor
@@ -165,8 +165,8 @@ def getTripInfo(conn, tripid):
 def blockUser(conn, user1, user2):
     # make this mutual
     cur = conn.cursor()
-    cur.execute('''INSERT INTO BLOCKS(userid1, userid2) VALUES(%s, %s))''', (user1, user2))
-    cur.execute('''INSERT INTO BLOCKS(userid1, userid2) VALUES(%s, %s))''', (user2, user1))
+    cur.execute('''INSERT INTO BLOCKS(userid1, userid2) VALUES(%s, %s)''', (user1, user2))
+    cur.execute('''INSERT INTO BLOCKS(userid1, userid2) VALUES(%s, %s)''', (user2, user1))
     return True
 
 # Git Anchor
@@ -206,14 +206,11 @@ def listFriends(conn, caseid):
         '''
         SELECT U.caseid, U.first_name, U.last_name
         FROM FRIENDSHIPS as F, USERS as U
-        WHERE F.userid1 = %s AND U.caseid = F.userid2''', (caseid,))
-        # SELECT *
-        # FROM FRIENDSHIPS as F
-        # WHERE F.userid1 = %s AND
-        #     NOT EXISTS (
-        #         SELECT *
-        #         FROM BLOCKS as B
-        #         WHERE B.userid1 = F.userid2 AND B.userid2 = F.userid1
-        #     )
-        # ''', (caseid,))
+        WHERE F.userid1 = %s AND U.caseid = F.userid2 AND
+            NOT EXISTS (
+                SELECT *
+                FROM BLOCKS as B
+                WHERE B.userid1 = F.userid2 AND B.userid2 = F.userid1
+            )
+        ''', (caseid,))
     return cur.fetchmany(10)
