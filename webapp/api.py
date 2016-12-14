@@ -94,12 +94,12 @@ def generic_trip(results_to_return):
         ehour = ''
         lmin = ''
         lhour = ''
-        trips = database.getAllTrips(conn, 3)
+        trips = database.getAllTrips(conn, results_to_return)
     else:
         start_time = datetime.now().replace(hour = ehour).replace(minute = emin)
         end_time = datetime.now().replace(hour = lhour).replace(minute = lmin)
         prefer_friends = bool(request.args.get('friends'))
-        trips = database.getSpecificTrips(conn, 3,from_,to_,start_time,end_time)
+        trips = database.getSpecificTrips(conn, results_to_return,from_,to_,start_time,end_time)
     destinations = database.getAllDestinations(conn)
 
     return render_template('find_trip.html',
