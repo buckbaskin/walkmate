@@ -1,10 +1,21 @@
 import uuid
 import psycopg2
+
+def commit_me(func):
+    def replacement(conn, *args, **kwargs):
+        result = func(conn, *args, **kwargs)
+        conn.commit()
+        return result
+    replacement.__name__ = func.__name__
+    return replacement
+
 def getAllDestinations(conn):
     cur = conn.cursor()
     cur.execute('SELECT * FROM DESTINATIONS')
     return cur.fetchall()
+
 # Git anchor
+@commit_me
 def createNewTrip(conn, caseid,start_destination,end_destination,start_time):
     cur = conn.cursor()
     tripid = uuid.uuid4().hex
@@ -103,9 +114,14 @@ def checkTripExists(conn, tripid):
 
 # Git anchor
 
+@commit_me
 def addToTrip(conn, tripid, caseid):
+    print('addToTrip(%s, %s)' % (tripid, caseid,))
     cur = conn.cursor()
-    cur.execute('''INSERT INTO MEMBERS(tripid, caseid) VALUES(tripid, caseid))''')
+    try:
+        cur.execute('''INSERT INTO MEMBERS(tripid, caseid) VALUES(%s, %s)''', (tripid, caseid,))
+    except psycopg2.IntegrityError:
+        return False
     return True
 
 # Git anchor
@@ -137,7 +153,7 @@ def getUserByTrip(conn, tripid):
 
 def getTripMembers(conn, tripid):
     cur = conn.cursor()
-    cur.execute('''SELECT [COUNT] * FROM MEMBERS WHERE tripid = %s'''(tripid,))
+    cur.execute('''SELECT COUNT(*) FROM MEMBERS WHERE tripid = %s'''(tripid,))
     return cur.fetchall()
 
 # Git anchor
@@ -161,3 +177,78 @@ def getSpecificFriendsTrips(conn, size, start_destination, end_destination, star
 
 
 # Git Anchor
+
+@commit_me
+def blockUser(conn, user1, user2):
+    # make this mutual
+    cur = conn.cursor()
+    cur.execute('''INSERT INTO BLOCKS(userid1, userid2) VALUES(%s, %s)''', (user1, user2))
+    conn.commit()
+    cur.execute('''INSERT INTO BLOCKS(userid1, userid2) VALUES(%s, %s)''', (user2, user1))
+    conn.commit()
+    return True
+
+# Git Anchor
+
+def checkBlocked(conn, user1, blocked_by):
+    cur = conn.cursor()
+    result = cur.execute('''
+        SELECT COUNT(*)
+        FROM BLOCKS 
+        WHERE userid1=%s AND userid2=%s''', (user1, blocked_by,))
+    return result is not None
+
+# Git Anchor
+
+@commit_me
+def makeFriends(conn, user1, user2):
+    cur = conn.cursor()
+    if not checkBlocked(conn, user1, user2):
+        try:
+            cur.execute('''
+                INSERT INTO FRIENDSHIPS(userid1, userid2)
+                VALUES(%s, %s)''', (user1, user2))
+            conn.commit()
+        except psycopg2.IntegrityError:
+            pass
+
+        # print('friends of %s\n%s' % (user1, list(listFriends(conn, user1)),))
+
+        return True
+    return False
+
+# Git Anchor
+
+def listFriends(conn, caseid):
+    cur = conn.cursor()
+    cur.execute(
+        '''
+        SELECT U.caseid, U.first_name, U.last_name
+        FROM FRIENDSHIPS as F, USERS as U
+        WHERE F.userid1 = %s AND U.caseid = F.userid2 AND
+            NOT EXISTS (
+                SELECT *
+                FROM BLOCKS as B
+                WHERE B.userid1 = F.userid2 AND B.userid2 = F.userid1
+            )
+        ''', (caseid,))
+    return cur.fetchmany(10)
+
+# Git Anchor
+
+def countLikes(conn, caseid):
+    cur = conn.cursor()
+    result = cur.execute(
+        '''
+        SELECT COUNT(*)
+        FROM USERRATINGS
+        WHERE rateeid = %s
+        ''', (caseid,))
+    if result is None:
+        return 0
+    else:
+        return result[0]
+
+def rateTrip(conn, tripid):
+    # TODO(buckbaskin)
+    return True

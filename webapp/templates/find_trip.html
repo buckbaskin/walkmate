@@ -6,14 +6,22 @@
   <select class="form-control" name="from_" id="sel_from">
     <option value="0">Select starting destination</option>
     {% for destination in destinations %}
-    <option value="{{ destination[0] }}">{{ destination[1] }} ({{ destination[2] }})</option>
+      {% if destination[0] == from_ %}
+      <option value="{{ destination[0] }}" selected="selected">{{ destination[1] }} ({{ destination[2] }})</option>
+      {% else %}
+      <option value="{{ destination[0] }}">{{ destination[1] }} ({{ destination[2] }})</option>
+      {% endif %}
     {% endfor %}
   </select>
   <label for="sel_to">To:</label>
   <select class="form-control" name="to_" id="sel_to">
   <option value="0">Select ending destination</option>
     {% for destination in destinations %}
-    <option value="{{ destination[0] }}">{{ destination[1] }} ({{ destination[2] }})</option>
+      {% if destination[0] == to_ %}
+      <option value="{{ destination[0] }}" selected="selected">{{ destination[1] }} ({{ destination[2] }})</option>
+      {% else %}
+      <option value="{{ destination[0] }}">{{ destination[1] }} ({{ destination[2] }})</option>
+      {% endif %}
     {% endfor %}
   </select>
   <label for="sel_etime">Earliest Time:</label>
@@ -22,7 +30,11 @@
     <select class="form-control" name="ehour" id="sel_etime">
         <option value="0">Hour</option>
         {% for n in range(0, 23) %}
+        {% if n == ehour %}
+        <option selected="selected">{{ n }}</option>
+        {% else %}
         <option>{{ n }}</option>
+        {% endif %}
         {% endfor %}
       </select>
     </div>
@@ -30,7 +42,11 @@
       <select class="form-control" name="emin" id="sel_etime2">
       <option value="0">Min</option>
         {% for n in range(0, 60, 15) %}
+        {% if n == emin %}
+        <option selected="selected">{{ n }}</option>
+        {% else %}
         <option>{{ n }}</option>
+        {% endif %}
         {% endfor %}
       </select>
     </div>
@@ -41,7 +57,11 @@
       <select class="form-control" name="lhour" id="sel_ltime">
       <option value="0">Hour</option>
         {% for n in range(0, 24) %}
+        {% if n == lhour %}
+        <option selected="selected">{{ n }}</option>
+        {% else %}
         <option>{{ n }}</option>
+        {% endif %}
         {% endfor %}
       </select>
     </div>
@@ -49,7 +69,11 @@
       <select class="form-control" name="lmin" id="sel_ltime2">
       <option value="0">Min</option>
         {% for n in range(0, 60, 15) %}
+        {% if n == lmin %}
+        <option selected="selected">{{ n }}</option>
+        {% else %}
         <option>{{ n }}</option>
+        {% endif %}
         {% endfor %}
       </select>
     </div>
@@ -100,9 +124,11 @@
       <a href="/new_trip">
         <button type="button" class="btn">Create New Trip</button>
       </a>
-      <a href="/trip_more?trip-from={{ from_ }}&trip-to={{ to_ }}&trip-at={{ at }}">
+      {% if trips.__len__() == 3 %}
+      <a href="/trip_more?from_={{from_}}&to_={{to_}}&ehour={{ehour}}&emin={{emin}}&lhour={{lhour}}&lmin={{lmin}}#">
         <button type="button" class="btn">Load More Trips</button>
       </a>
+      {% endif %}
     </span>
 
     {% endblock%}
