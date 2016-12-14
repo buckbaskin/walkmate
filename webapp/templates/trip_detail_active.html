@@ -3,9 +3,13 @@
 
 <p>
 The current status of your trip is:
-
-Active since insert time here
 </p>
-<button type="button" class="btn">End Trip</button>
+<p>
+Active since {{ trip[-2] }} : {{ trip[-1] }}
+</p>
+<p>
+The trip will automatically conclude at {{ ((trip[-2]+1) % 24) }} : {{ trip[-1] }}
+</p>
+
 
 {% endblock %}

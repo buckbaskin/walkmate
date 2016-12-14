@@ -3,6 +3,9 @@
 
 <div class="jumbotron">
   <h1>{{first_name}} {{last_name}} - {{ username }}</h1>
+  {% if like_count %}
+  <h2>This user has lots of likes! {{ like_count }} users like trips they've been on together!</h2>
+  {% endif %}
 </div>
 
 <h2> User Trips </h2>
@@ -11,4 +14,32 @@
   <a href="/t/{{ trip[0] }}" class="list-group-item">From: {{ trip[1] }} To: {{ trip[2] }}</a>
 {% endfor %}
 </div>
+
+<h2> Add Friend </h2>
+<form class="" role="search" action="/u/{{ username }}/friend" method="get">
+  <div class="col-md-8">
+    <input type="text" id="user" name="user" value="{{ user }}" class="form-control" placeholder="abc123">
+  </div>
+  <div class="col-md-4">
+    <input type="submit" class="btn btn-default" value="Add Friend">
+  </div>
+</form>
+
+<h2> Block User </h2>
+<form class="" role="search" action="/u/{{ username }}/block" method="get">
+  <div class="col-md-8">
+    <input type="text" id="user" name="user" value="{{ user }}" class="form-control" placeholder="abc123">
+  </div>
+  <div class="col-md-4">
+    <input type="submit" class="btn btn-default" value="Block User">
+  </div>
+</form>
+
+<h2> Friends </h2>
+<div class="list-group">
+{% for friend in friend_list %}
+  <a href="/u/{{ friend[0] }}" class="list-group-item">{{ friend[1] }} {{ friend[2] }}</a>
+{% endfor %}
+</div>
+
 {% endblock%}

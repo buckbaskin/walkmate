@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h1>Trip</h1>
-
+<div class="jumbotron">
 {% block detailcontent%}{% endblock %}
+</div>
 
 {% if user_list %}
 <h2>Participants</h2>
@@ -13,7 +13,7 @@
 {% endfor %}
 </div>
 
-<form class="" role="search" action="/t/{{ trip[0] }}/join" method="post">
+<form class="" role="search" action="/t/{{ trip[0] }}/join" method="get">
   <div class="input-group">
     <span class="input-group-addon" id="basic-addon4">case id</span>
     <input type="text" id="caseid" name="caseid" value="{{caseid}}" class="form-control" placeholder="abc123" aria-describedby="basic-addon4">
