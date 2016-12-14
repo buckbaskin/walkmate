@@ -116,8 +116,12 @@ def checkTripExists(conn, tripid):
 
 @commit_me
 def addToTrip(conn, tripid, caseid):
+    print('addToTrip(%s, %s)' % (tripid, caseid,))
     cur = conn.cursor()
-    cur.execute('''INSERT INTO MEMBERS(tripid, caseid) VALUES(%s, %s)''', (tripid, caseid,))
+    try:
+        cur.execute('''INSERT INTO MEMBERS(tripid, caseid) VALUES(%s, %s)''', (tripid, caseid,))
+    except psycopg2.IntegrityError:
+        return False
     return True
 
 # Git anchor
@@ -200,7 +204,6 @@ def makeFriends(conn, user1, user2):
 # Git Anchor
 
 def listFriends(conn, caseid):
-    print('listFriends(%s)' % (caseid,))
     cur = conn.cursor()
     cur.execute(
         '''
@@ -214,3 +217,22 @@ def listFriends(conn, caseid):
             )
         ''', (caseid,))
     return cur.fetchmany(10)
+
+# Git Anchor
+
+def countLikes(conn, caseid):
+    cur = conn.cursor()
+    result = cur.execute(
+        '''
+        SELECT COUNT(*)
+        FROM USERRATINGS
+        WHERE rateeid = %s
+        ''', (caseid,))
+    if result is None:
+        return 0
+    else:
+        return result[0]
+
+def rateTrip(conn, tripid):
+    # TODO(buckbaskin)
+    return True

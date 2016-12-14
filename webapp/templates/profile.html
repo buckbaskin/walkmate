@@ -3,6 +3,9 @@
 
 <div class="jumbotron">
   <h1>{{first_name}} {{last_name}} - {{ username }}</h1>
+  {% if like_count %}
+  <h2>This user has lots of likes! {{ like_count }} users like trips they've been on together!</h2>
+  {% endif %}
 </div>
 
 <h2> User Trips </h2>

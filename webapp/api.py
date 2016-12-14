@@ -31,11 +31,13 @@ def profile_page(caseid):
     # print('trips'+str(trips ))
     friend_list = database.listFriends(conn, caseid)
     print('Friend list: %s' % (friend_list,))
+
+    like_count = database.countLikes(conn, caseid)
     return render_template('profile.html',
                            title1='W', title2='%s %s' % (first_name, last_name,),
                            username=caseid, trips=trips,
                            first_name=first_name, last_name=last_name, 
-                           friend_list=friend_list)
+                           friend_list=friend_list, like_count=like_count)
 
 @router.route('/u/<caseid>/friend')
 def friend_user(caseid):
@@ -121,21 +123,30 @@ def loadMoreTrips():
         from_=from_, to_=to_, at_=at_,
         trips=trips)
 
-@router.route('/t/<shorttripid>/join', methods=['POST'])
+@router.route('/t/<shorttripid>/join', methods=['GET'])
 def joinTripPage(shorttripid):
     # TODO implement joining a trip
     # TODO GET trip to check if it exists
     # TODO Write user to trip
+    print('joining trip %s' % (shorttripid,))
     long_id = shorttripid
     trip_exists = database.checkTripExists(conn, shorttripid)
     if not trip_exists:
+        print('trip does not exist')
         return redirect('/trip')
+    print('trip exists')
 
     caseid = request.args.get('caseid')
+    print('request.args %s' % (request.args,))
     if caseid is not None:
-        print('add user %s to trip %s' % (caseid, tripid,))
-        database.addToTrip(conn, tripid, caseid)
+        print('add user %s to trip %s' % (caseid, shorttripid,))
+        database.addToTrip(conn, shorttripid, caseid)
 
+    return redirect('/t/%s' % (shorttripid,))
+
+@router.route('/t/<shorttripid>/like', methods=['GET'])
+def rateTrip(shorttripid):
+    database.rateTrip(conn, shorttripid)
     return redirect('/t/%s' % (shorttripid,))
 
 @router.route('/t/<shorttripid>', methods=['GET'])
@@ -169,8 +180,8 @@ def tripDetailPage(shorttripid):
         print('trip tuple: %s' % (trips,))
         trip = trips[0]
         if (datetime.now() - trip[3]).total_seconds() < 0:
-            return render_template('trip_detail_soon.html', trip=trip, user_list=user_list)
+            return render_template('trip_detail_soon.html', trip=trip, title1='W', title2='Trip', user_list=user_list)
         elif (datetime.now() - trip[3]).total_seconds() < 60 * 60:
-            return render_template('trip_detail_active.html', trip=trip, user_list=user_list)
+            return render_template('trip_detail_active.html', trip=trip, title1='W', title2='Trip', user_list=user_list)
         else:
-            return render_template('trip_detail_done.html', trip=trip, user_list=user_list)
+            return render_template('trip_detail_done.html', trip=trip, title1='W', title2='Trip', user_list=user_list)
