@@ -148,3 +148,16 @@ def getTripInfo(conn, tripid):
     return trip_info
 
 # Git Anchor
+def getSpecificFriendsTrips(conn, size, start_destination, end_destination, start_time, end_time, caseid):
+    cur = conn.cursor()
+    cur.execute('''
+        SELECT T.tripid, D1.dname, D2.dname, T.start_time
+        FROM TRIPS as T, Destinations as D1, Destinations as D2
+        WHERE D1.did = T.start_destination AND D2.did = T.end_destination AND T.start_destination = %s AND T.end_destination = %s AND T.start_time > %s AND T.start_time < %s AND EXISTS(SELECT M.caseid FROM MEMBERS AS M, FRIENDSHIPS AS F WHERE M.caseid = F.userid1 AND M.tripid = T.tripid AND F.userid2 = %s)''', (start_destination, end_destination, start_time, end_time, caseid,))
+    
+    
+    for tuple_ in cur.fetchmany(size):
+        yield (tuple_[0], tuple_[1], tuple_[2], tuple_[3], tuple_[-1].hour, tuple_[-1].minute)
+
+
+# Git Anchor
