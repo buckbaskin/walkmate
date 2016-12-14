@@ -83,11 +83,12 @@ def getUser(conn, caseid):
 # Git anchor
 
 def getUserTrips(conn, caseid):
+    print('getUserTrips(%s)' % (caseid,))
     cur = conn.cursor()
     cur.execute('''
-        SELECT T.*
-        FROM TRIPS as T, MEMBERS as M
-        WHERE M.tripid = T.tripid AND M.caseid = %s
+        SELECT T.tripid, D1.dname, D2.dname
+        FROM USERS as U, TRIPS as T, MEMBERS as M, DESTINATIONS as D1, DESTINATIONS as D2
+        WHERE U.caseid = %s AND M.tripid = T.tripid AND U.caseid = M.caseid AND T.start_destination = D1.did AND T.end_destination = D2.did
         ''', (caseid,))
     return cur.fetchall()
 
@@ -104,5 +105,46 @@ def checkTripExists(conn, tripid):
 
 def addToTrip(conn, tripid, caseid):
     cur = conn.cursor()
-    #  TODO ... implement
+    cur.execute('''INSERT INTO MEMBERS(tripid, caseid) VALUES(tripid, caseid))''')
     return True
+
+# Git anchor
+
+def getSpecificTrips(conn, size, start_destination, end_destination, start_time, end_time):
+    cur = conn.cursor()
+    cur.execute('''
+        SELECT T.tripid, D1.dname, D2.dname, T.start_time
+        FROM TRIPS as T, Destinations as D1, Destinations as D2
+        WHERE D1.did = T.start_destination AND D2.did = T.end_destination AND T.start_destination = %s AND T.end_destination = %s AND T.start_time > %s AND T.start_time < %s''', (start_destination, end_destination, start_time, end_time))
+    
+    
+    for tuple_ in cur.fetchmany(size):
+        yield (tuple_[0], tuple_[1], tuple_[2], tuple_[3], tuple_[-1].hour, tuple_[-1].minute)
+
+
+# Git Anchor
+
+def getUserByTrip(conn, tripid):
+    cur = conn.cursor()
+    cur.execute('''
+        SELECT U.*
+        FROM USERS as U, TRIPS as T, MEMBERS as M
+        WHERE T.tripid = %s AND M.tripid = T.tripid AND U.caseid = M.caseid
+        ''', (tripid,))
+
+    return cur.fetchall()
+# Git anchor
+
+def getTripMembers(conn, tripid):
+    cur = conn.cursor()
+    cur.execute('''SELECT [COUNT] * FROM MEMBERS WHERE tripid = %s'''(tripid,))
+    return cur.fetchall()
+
+# Git anchor
+
+def getTripInfo(conn, tripid):
+    cur = conn.cursor()
+    cur.execute('''SELECT * FROM TRIPS WHERE tripid = %s'''(tripid,))
+    return trip_info
+
+# Git Anchor

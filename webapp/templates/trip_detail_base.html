@@ -1,8 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h1>Trip!</h1>
-<p>{{ trip }}</p>
+<h1>Trip</h1>
 
 {% block detailcontent%}{% endblock %}
 
@@ -10,11 +9,8 @@
 <h2>Participants</h2>
 <div class="list-group">
 {% for user in user_list %}
-  <a href="/u/{{ user[1] }}" class="list-group-item">{{ user[0] }}</a>
+  <a href="/u/{{ user[0] }}" class="list-group-item">{{ user[2] }} {{ user[3] }}</a>
 {% endfor %}
-  <a href="/u/abc123" class="list-group-item">Morbi leo risus</a>
-  <a href="/u/abc124" class="list-group-item">Porta ac consectetur ac</a>
-  <a href="/u/abc125" class="list-group-item">Vestibulum at eros</a>
 </div>
 
 <form class="" role="search" action="/t/{{ trip[0] }}/join" method="post">
