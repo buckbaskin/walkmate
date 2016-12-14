@@ -78,6 +78,13 @@
       </select>
     </div>
   </div>
+  <div class = "checkbox">
+    <label><input type="checkbox" name="friends">Prefer Friends</label>
+  </div>
+  <div class="input-group">
+    <label for="caseid">Case Id:</label>
+    <input type="text" id="caseid" name="caseid" value="{{caseid}}" class="form-control" placeholder="abc123" aria-describedby="basic-addon4">
+  </div>
   <input type="submit" class="btn btn-default" value="Submit">
 </form>
 {% if friends_trips %}
