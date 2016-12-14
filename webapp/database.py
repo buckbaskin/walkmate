@@ -154,7 +154,7 @@ def getUserByTrip(conn, tripid):
 
 def getTripMembers(conn, tripid):
     cur = conn.cursor()
-    cur.execute('''SELECT COUNT(*) FROM MEMBERS WHERE tripid = %s'''(tripid,))
+    cur.execute('''SELECT * FROM MEMBERS WHERE tripid = %s''', (tripid,))
     return cur.fetchall()
 
 # Git anchor
@@ -253,14 +253,15 @@ def countLikes(conn, caseid):
 def rateTrip(conn, tripid,caseid):
     cur = conn.cursor()
     try:
-        cur.execute('INSERT INTO TRIPRATINGS(tripid,caseid) VALUES (%s, %s)',(tripid,caseid,))
-    except psycopg2.IntegrityError as e:
+        cur.execute('INSERT INTO TRIPRATINGS(tripid,raterid) VALUES (%s, %s)',(tripid,caseid,))
+    except (psycopg2.IntegrityError, psycopg2.InternalError,):
         pass
     tripMembers = getTripMembers(conn,tripid)
-    for tuple_ in tripMemebers:
-        rateUsers(conn,caseid,tuple_[0])
+    for tuple_ in tripMembers:
+        rateUsers(conn,caseid,tuple_[1])
     return True
 def rateUsers(conn,userid1,userid2):
+    cur = conn.cursor()
     cur.execute(
         '''
         SELECT *
@@ -268,11 +269,17 @@ def rateUsers(conn,userid1,userid2):
         WHERE U.raterid = %s AND U.rateeid = %s''',(userid1,userid2,))
     result = cur.fetchone()
     if result is None:
-        cur.execute('INSERT INTO USERRATINGS(raterid,rateeid,rating) VALUES (%s, %s)',(userid1,userid2,1,))
-        conn.commit()
+        try:
+            cur.execute('INSERT INTO USERRATINGS(raterid,rateeid,rating) VALUES (%s, %s, %s)',(userid1,userid2,1,))
+            conn.commit()
+        except psycopg2.InternalError:
+            pass
     else:
-        cur.execute('UPDATE USERRATINGS AS U SET rating = rating +1 WHERE U.raterid = %s AND U.rateeid = %s', (userid1,userid2,))
-        conn.commit()
+        try:
+            cur.execute('UPDATE USERRATINGS AS U SET rating = rating +1 WHERE U.raterid = %s AND U.rateeid = %s', (userid1,userid2,))
+            conn.commit()
+        except psycopg2.InternalError:
+            pass
 
 def verifyCaseid(conn,caseid):
     cur = conn.cursor()

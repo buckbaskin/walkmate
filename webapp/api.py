@@ -151,7 +151,8 @@ def joinTripPage(shorttripid):
 
 @router.route('/t/<shorttripid>/like', methods=['GET'])
 def rateTrip(shorttripid):
-    database.rateTrip(conn, shorttripid)
+    caseid = request.args.get('caseid')
+    database.rateTrip(conn, shorttripid, caseid)
     return redirect('/t/%s' % (shorttripid,))
 
 @router.route('/t/<shorttripid>', methods=['GET'])
@@ -189,4 +190,4 @@ def tripDetailPage(shorttripid):
         elif (datetime.now() - trip[3]).total_seconds() < 60 * 60:
             return render_template('trip_detail_active.html', trip=trip, title1='W', title2='Trip', user_list=user_list)
         else:
-            return render_template('trip_detail_done.html', trip=trip, title1='W', title2='Trip', user_list=user_list)
+            return render_template('trip_detail_done.html', trip=trip, title1='W', title2='Trip', user_list=user_list, tripid=shorttripid)
