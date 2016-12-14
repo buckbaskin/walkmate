@@ -81,6 +81,7 @@ def generic_trip(results_to_return):
     print('generic_trip...')
     from_ = request.args.get('from_')
     to_ = request.args.get('to_')
+    caseid = request.args.get('caseid')
     try:
         ehour = int(request.args.get('ehour'))
         emin = int(request.args.get('emin'))
