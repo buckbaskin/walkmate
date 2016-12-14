@@ -98,22 +98,25 @@ def generic_trip(results_to_return):
         lhour = ''
         friend_trips = []
         trips = database.getAllTrips(conn, results_to_return)
+        trips = list(trips)
     else:
         start_time = datetime.now().replace(hour = ehour).replace(minute = emin)
         end_time = datetime.now().replace(hour = lhour).replace(minute = lmin)
         prefer_friends = bool(request.args.get('friends'))
-        trips = database.getSpecificTrips(conn, results_to_return,from_,to_,start_time,end_time)
         if prefer_friends and caseid is not None:
             friend_trips = database.getSpecificFriendsTrips(conn, results_to_return, from_,to_,start_time,end_time,caseid)
+            trips = list(friend_trips)
+            trips2 = database.getSpecificTrips(conn, results_to_return-len(trips),from_,to_,start_time,end_time)
         else:
-            friend_trips = []
+            trips = database.getSpecificTrips(conn, results_to_return,from_,to_,start_time,end_time)
+            trips = list(trips)
     destinations = database.getAllDestinations(conn)
 
     return render_template('find_trip.html',
         title1='W', title2='Find a Trip',
         destinations=destinations,
         from_=from_, to_=to_, ehour = ehour, emin = emin, lmin = lmin, lhour= lhour,
-        friend_trips=friend_trips, trips=trips)
+        friend_trips=[], trips=trips)
 
 
 @router.route('/trip', methods=['GET'])
