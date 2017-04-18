@@ -152,7 +152,7 @@ def joinTripPage(shorttripid):
 @router.route('/t/<shorttripid>/like', methods=['GET'])
 def rateTrip(shorttripid):
     caseid = request.args.get('caseid')
-    if database.verifyCaseid(conn,caseid):
+    if database.verifyCaseid(conn,caseid) and database.isMemberTrip(conn,caseid,shorttripid):
         database.rateTrip(conn, shorttripid, caseid)
     return redirect('/t/%s' % (shorttripid,))
 

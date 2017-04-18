@@ -295,7 +295,19 @@ def verifyCaseid(conn,caseid):
         return True
     else:
         return False
-
+def isMemberTrip(conn,caseid,tripid):
+    cur = conn.cursor()
+    cur.execute(
+        '''
+        SELECT *
+        FROM MEMBERS as M
+        WHERE M.caseid = %s AND M.tripid = %s
+        ''',(caseid,tripid,))
+    userexists = cur.fetchone()
+    if userexists is not None:
+        return True
+    else:
+        return False
 def addUser(caseid,hashed_password,first_name,last_name):
     query = 'INSERT INTO USERS (caseid, hashed_password, first_name, last_name, date_joined) VALUES (%s, %s, %s, %s, %s)'
     date_joined = datetime.datetime.utcnow()
