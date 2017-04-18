@@ -44,7 +44,7 @@ def createNewTrip(conn, caseid,start_destination,end_destination,start_time):
         query2 = "INSERT INTO MEMBERS (tripid, caseid) VALUES (%s, %s)"
         data2 = (tripid, caseid)
         cur.execute(query2,data2)
-    except:    
+    except:
         print('Database insertion error, most likely not uuid collision')
         errorflag = True
         raise
@@ -133,8 +133,8 @@ def getSpecificTrips(conn, size, start_destination, end_destination, start_time,
         SELECT T.tripid, D1.dname, D2.dname, T.start_time
         FROM TRIPS as T, Destinations as D1, Destinations as D2
         WHERE D1.did = T.start_destination AND D2.did = T.end_destination AND T.start_destination = %s AND T.end_destination = %s AND T.start_time > %s AND T.start_time < %s''', (start_destination, end_destination, start_time, end_time))
-    
-    
+
+
     for tuple_ in cur.fetchmany(size):
         yield (tuple_[0], tuple_[1], tuple_[2], tuple_[3], tuple_[-1].hour, tuple_[-1].minute)
 
@@ -171,8 +171,8 @@ def getSpecificFriendsTrips(conn, size, start_destination, end_destination, star
         SELECT T.tripid, D1.dname, D2.dname, T.start_time
         FROM TRIPS as T, Destinations as D1, Destinations as D2
         WHERE D1.did = T.start_destination AND D2.did = T.end_destination AND T.start_destination = %s AND T.end_destination = %s AND T.start_time > %s AND T.start_time < %s AND EXISTS(SELECT M.caseid FROM MEMBERS AS M, FRIENDSHIPS AS F WHERE M.caseid = F.userid1 AND M.tripid = T.tripid AND F.userid2 = %s)''', (start_destination, end_destination, start_time, end_time, caseid,))
-    
-    
+
+
     for tuple_ in cur.fetchmany(size):
         yield (tuple_[0], tuple_[1], tuple_[2], tuple_[3], tuple_[-1].hour, tuple_[-1].minute)
 
@@ -195,7 +195,7 @@ def checkBlocked(conn, user1, blocked_by):
     cur = conn.cursor()
     result = cur.execute('''
         SELECT COUNT(*)
-        FROM BLOCKS 
+        FROM BLOCKS
         WHERE userid1=%s AND userid2=%s''', (user1, blocked_by,))
     return result is not None
 
@@ -255,6 +255,7 @@ def rateTrip(conn, tripid,caseid):
     try:
         cur.execute('INSERT INTO TRIPRATINGS(tripid,raterid) VALUES (%s, %s)',(tripid,caseid,))
     except (psycopg2.IntegrityError, psycopg2.InternalError,):
+        conn.commit()
         pass
     tripMembers = getTripMembers(conn,tripid)
     for tuple_ in tripMembers:

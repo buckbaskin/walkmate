@@ -39,7 +39,7 @@ def profile_page(caseid):
     return render_template('profile.html',
                            title1='W', title2='%s %s' % (first_name, last_name,),
                            username=caseid, trips=trips,
-                           first_name=first_name, last_name=last_name, 
+                           first_name=first_name, last_name=last_name,
                            friend_list=friend_list, like_count=like_count)
 
 @router.route('/u/<caseid>/friend')
@@ -152,7 +152,8 @@ def joinTripPage(shorttripid):
 @router.route('/t/<shorttripid>/like', methods=['GET'])
 def rateTrip(shorttripid):
     caseid = request.args.get('caseid')
-    database.rateTrip(conn, shorttripid, caseid)
+    if database.verifyCaseid(conn,caseid):
+        database.rateTrip(conn, shorttripid, caseid)
     return redirect('/t/%s' % (shorttripid,))
 
 @router.route('/t/<shorttripid>', methods=['GET'])
